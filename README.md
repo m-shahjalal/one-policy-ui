@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧾 OnePolicy – Privacy Policy, Terms Generator SaaS
 
-## Getting Started
+OnePolicy helps solo founders and indie developers generate legal documents (Privacy Policy, Terms & Conditions, Cookie Policy, etc.) tailored to their business — without needing a lawyer. Users can use the tool anonymously, or sign up to save/share documents.
 
-First, run the development server:
+## 🔗 Live Demo
+
+[https://onepolicy.vercel.app](https://OnePolicy.vercel.app)
+
+---
+
+## ✨ Features
+
+- 📝 Generate Privacy Policy, Terms & Conditions, Cookie Policy, and more
+- 🎛️ Multi-step form with smart field logic
+- 🔐 Anonymous usage or optional login to save/share
+- 🧠 Multiple writing styles (formal, casual, concise, etc.)
+- 📄 Export as text or PDF
+- ☁️ Built with modern technologies (Next.js, Go, PostgreSQL)
+
+---
+
+## 🚀 Tech Stack
+
+### Frontend
+
+- [Next.js 15](https://nextjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/) – component library
+- [next-intl](https://next-intl-docs.vercel.app/) – (optional) internationalization
+- [Zod](https://zod.dev/) – schema validation
+
+### Backend
+
+- Go (Golang)
+- PostgreSQL
+- REST API with session or JWT-based authentication
+
+---
+
+## 🛠️ Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/OnePolicy.git
+cd OnePolicy
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure Environment Variables
+
+Create a `.env` file in the root directory and add your environment variables form env.example file.
+
+### 4. Start the App
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
