@@ -1,5 +1,6 @@
 "use client";
 
+import { pages } from "@/config/pages";
 import { motion } from "framer-motion";
 import { Shield, CheckCircle } from "lucide-react";
 
@@ -96,7 +97,7 @@ export default function CTASection() {
               className="flex flex-col sm:flex-row gap-4 items-center justify-center"
             >
               <motion.a
-                href="#"
+                href={pages.policies.index}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 text-lg"
@@ -105,7 +106,7 @@ export default function CTASection() {
               </motion.a>
 
               <a
-                href="#"
+                href="#sections"
                 className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2"
               >
                 <span>Learn more</span>

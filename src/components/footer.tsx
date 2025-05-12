@@ -12,29 +12,28 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { pages } from "@/config/pages";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   const mainLinks = [
-    { label: "Home", href: "/" },
-    { label: "Features", href: "/features" },
-    { label: "Pricing", href: "/pricing" },
-    { label: "Contact", href: "/contact" },
+    { label: "Home", href: pages.home },
+    { label: "Features", href: pages.features },
+    { label: "Pricing", href: pages.pricing },
+    { label: "Contact", href: pages.contact },
   ];
 
   const legalLinks = [
-    { label: "Privacy Policy", href: "/privacy-policy" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Cookie Policy", href: "/cookies" },
-    { label: "GDPR Compliance", href: "/gdpr" },
+    { label: "Privacy Policy", href: pages.ourPolicy },
+    { label: "Terms of Service", href: pages.ourTerms },
+    { label: "Cookie Policy", href: pages.ourCookie },
+    { label: "GDPR Compliance", href: pages.ourGDPR },
   ];
 
   const resourceLinks = [
     { label: "Blog", href: "/blog" },
     { label: "Help Center", href: "/help" },
-    { label: "Documentation", href: "/docs" },
-    { label: "API", href: "/api" },
   ];
 
   const socialLinks = [
@@ -53,7 +52,7 @@ export default function Footer() {
           <div>
             <div className="mb-4">
               <Link
-                href="/"
+                href={pages.home}
                 className="flex items-center gap-2 text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400"
               >
                 <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -77,17 +76,17 @@ export default function Footer() {
               <div className="flex items-center text-gray-600 dark:text-gray-300 group">
                 <Phone className="w-4 h-4 mr-2 text-gray-400 dark:text-gray-500 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors" />
                 <a
-                  href="tel:+1234567890"
+                  href="tel:+8801303327356"
                   className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
-                  (123) 456-7890
+                  +880 1303 327356
                 </a>
               </div>
             </div>
 
             <div className="mt-6">
               <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0">
-                Get Started Free
+                <Link href={pages.policies.index}>Get Started Free</Link>
               </Button>
             </div>
           </div>
@@ -104,7 +103,7 @@ export default function Footer() {
                     href={link.href}
                     className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center group"
                   >
-                    <span className="w-1.5 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mr-2 group-hover:bg-blue-500 dark:group-hover:bg-blue-400 transition-colors"></span>
+                    <span className="w-1.5 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mr-2 group-hover:bg-blue-500 dark:group-hover:bg-blue-400 transition-colors" />
                     {link.label}
                   </Link>
                 </li>
@@ -148,31 +147,6 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
-        </div>
-
-        {/* Newsletter */}
-        <div className="py-8 border-t border-gray-200 dark:border-gray-800">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div>
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                Stay updated
-              </h4>
-              <p className="text-gray-600 dark:text-gray-300">
-                Subscribe to our newsletter for the latest updates and legal
-                compliance tips.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                Subscribe
-              </Button>
-            </div>
           </div>
         </div>
 

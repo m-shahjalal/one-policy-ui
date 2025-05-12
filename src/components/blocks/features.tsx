@@ -1,5 +1,6 @@
 "use client";
 
+import { pages } from "@/config/pages";
 import { motion } from "framer-motion";
 import { Lock, Zap, FileText, Package, ArrowRight } from "lucide-react";
 
@@ -149,7 +150,7 @@ export default function FeaturesSection() {
           className="mt-16 text-center"
         >
           <a
-            href="#"
+            href={pages.features}
             className="inline-flex items-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
           >
             <span>View all features</span>

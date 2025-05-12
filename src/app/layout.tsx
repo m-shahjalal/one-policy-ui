@@ -1,10 +1,10 @@
-import "./globals.css";
+'use client"';
+
+import Provider from "@/components/provider";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Jost } from "next/font/google";
-import Navbar from "@/components/header";
-import { ThemeProvider } from "next-themes";
-import { cn } from "@/lib/utils";
-import Footer from "@/components/footer";
+import "./globals.css";
 
 const jost = Jost({ subsets: ["latin"], weight: "400" });
 
@@ -16,9 +16,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -27,11 +25,7 @@ export default function RootLayout({
           "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col min-h-screen"
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Navbar />
-          {children}
-          <Footer />
-        </ThemeProvider>
+        <Provider>{children}</Provider>
       </body>
     </html>
   );

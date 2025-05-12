@@ -15,6 +15,7 @@ import Link from "next/link";
 import { MenuIcon, FileText, X, ChevronRight, Shield } from "lucide-react";
 import { motion } from "framer-motion";
 import { ThemeToggle } from "./ui/theme-toggle";
+import { pages } from "@/config/pages";
 
 const NavLink = ({
   href,
@@ -144,11 +145,10 @@ export default function Navbar() {
   }, []);
 
   const links = [
-    { label: "Home", href: "/", icon: Shield },
-    { label: "Features", href: "/features", icon: FileText },
-    { label: "Pricing", href: "/pricing", icon: FileText },
-    { label: "Contact", href: "/contact", icon: FileText },
-    { label: "Privacy Policy", href: "/privacy-policy", icon: FileText },
+    { label: "Home", href: pages.home, icon: Shield },
+    { label: "Features", href: pages.features, icon: FileText },
+    { label: "Pricing", href: pages.pricing, icon: FileText },
+    { label: "Contact", href: pages.contact, icon: FileText },
   ];
 
   return (
@@ -169,7 +169,7 @@ export default function Navbar() {
           <div className="flex-1 flex items-center justify-center lg:justify-start">
             <Link
               href="/"
-              className="flex items-center gap-2 text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400"
+              className="flex items-center gap-1 text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400"
             >
               <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               OnePolicy

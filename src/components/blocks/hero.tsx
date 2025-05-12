@@ -1,7 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { pages } from "@/config/pages";
 import { motion } from "framer-motion";
 import { Check, ChevronDown, Shield } from "lucide-react";
+import Link from "next/link";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -312,7 +314,6 @@ const OnePolicyHero: React.FC<OnePolicyHeroProps> = ({
   title = "Generate Legal Pages for Your Website in Seconds",
   subtitle = "Privacy Policy, Terms & Conditions, Cookie Policy — all in one place.",
   primaryButtonText = "Get Started Free",
-  secondaryButtonText = "Try Demo",
   features = [
     "No signup required",
     "PDF export",
@@ -362,15 +363,7 @@ const OnePolicyHero: React.FC<OnePolicyHeroProps> = ({
               size="lg"
               className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white border-0 h-14 px-8 text-lg rounded-full shadow-lg shadow-blue-600/20 hover:shadow-blue-700/30 transition-all duration-300"
             >
-              {primaryButtonText}
-            </Button>
-
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-white/20 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 h-14 px-8 text-lg rounded-full"
-            >
-              {secondaryButtonText}
+              <Link href={pages.policies.index}>{primaryButtonText}</Link>
             </Button>
           </div>
 
