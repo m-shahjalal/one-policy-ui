@@ -283,7 +283,7 @@ export default function PricingPage() {
                       }`}
                       variant={plan.popular ? "default" : "outline"}
                     >
-                      <Link href={pages.policies.index}>{plan.cta}</Link>
+                      <Link href={pages.privacies.index}>{plan.cta}</Link>
                     </Button>
                   </div>
                 </div>
@@ -295,7 +295,7 @@ export default function PricingPage() {
             <p>
               All plans include a 14-day free trial. No credit card required.{" "}
               <Link
-                href="#"
+                href="#comparison"
                 className="text-blue-600 dark:text-blue-400 hover:underline"
               >
                 View full plan comparison
@@ -306,7 +306,7 @@ export default function PricingPage() {
       </section>
 
       {/* Feature comparison */}
-      <section className="py-20">
+      <section id="#comparison" className="py-20">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <motion.h2
@@ -538,7 +538,7 @@ export default function PricingPage() {
                   >
                     <Link
                       className="flex items-center"
-                      href={pages.policies.index}
+                      href={pages.privacies.index}
                     >
                       <Zap className="mr-2 h-5 w-5" />
                       Start For Free

@@ -1,8 +1,7 @@
 "use client";
 
-import { pages } from "@/config/pages";
 import { motion } from "framer-motion";
-import { Shield, CheckCircle } from "lucide-react";
+import { CheckCircle, Shield } from "lucide-react";
 
 export default function CTASection() {
   return (
@@ -97,10 +96,10 @@ export default function CTASection() {
               className="flex flex-col sm:flex-row gap-4 items-center justify-center"
             >
               <motion.a
-                href={pages.policies.index}
+                href="#feature-list"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 text-lg"
+                className="px-4 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 Generate Legal Pages Now
               </motion.a>

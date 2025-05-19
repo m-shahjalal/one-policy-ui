@@ -86,7 +86,9 @@ export default function Footer() {
 
             <div className="mt-6">
               <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0">
-                <Link href={pages.policies.index}>Get Started Free</Link>
+                <Link href={pages.features + "#feature-list"}>
+                  Get Started Free
+                </Link>
               </Button>
             </div>
           </div>

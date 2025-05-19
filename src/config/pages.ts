@@ -9,8 +9,15 @@ export const pages = {
   ourCookie: "/our-cookie",
   ourGDPR: "/our-gdpr",
 
+  auth: {
+    login: "/auth/login",
+    signup: "/auth/signup",
+    forgotPass: "/auth/forgot-password",
+    resetPass: "/auth/reset-password",
+  },
+
   cookies: {
-    index: "/cookies",
+    index: "/cookie-policy",
     create: {
       step1: "/cookies/create/step1",
       step2: "/cookies/create/step2",
@@ -25,8 +32,8 @@ export const pages = {
       step4: `/cookies/edit/${id}/step4`,
     }),
   },
-  policies: {
-    index: "/policies",
+  privacies: {
+    index: "/privacy-policy",
     create: {
       step1: "/policies/create/step1",
       step2: "/policies/create/step2",
@@ -42,7 +49,7 @@ export const pages = {
     }),
   },
   terms: {
-    index: "/terms",
+    index: "/term-conditions",
     create: {
       step1: "/terms/create/step1",
       step2: "/terms/create/step2",

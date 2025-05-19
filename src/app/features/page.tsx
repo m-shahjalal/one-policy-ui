@@ -1,22 +1,13 @@
 "use client";
 
+import { FeatureList } from "@/components/blocks/feature-list";
 import { Button } from "@/components/ui/button";
-import { pages } from "@/config/pages";
 import { motion } from "framer-motion";
 import {
   Check,
   ChevronRight,
   Clock,
-  Download,
   FileCode,
-  FileText,
-  Globe,
-  Lock,
-  Package,
-  Palette,
-  RefreshCw,
-  Shield,
-  Smartphone,
   Sparkles,
   Users,
 } from "lucide-react";
@@ -37,102 +28,6 @@ export default function FeaturesPage() {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
-
-  const featureCategories = [
-    {
-      title: "Document Generation",
-      description: "Create professional legal documents in seconds",
-      icon: FileText,
-      color: "from-blue-500 to-blue-600",
-      features: [
-        {
-          title: "Privacy Policy Generator",
-          description:
-            "Create a comprehensive privacy policy tailored to your business needs",
-          icon: Shield,
-        },
-        {
-          title: "Terms & Conditions",
-          description:
-            "Generate terms of service that protect your business and inform your users",
-          icon: FileText,
-        },
-        {
-          title: "Cookie Policy",
-          description:
-            "Stay compliant with cookie laws and regulations worldwide",
-          icon: Globe,
-        },
-        {
-          title: "Regular Updates",
-          description:
-            "Documents automatically updated to reflect the latest legal requirements",
-          icon: RefreshCw,
-        },
-      ],
-    },
-    {
-      title: "Customization & Integration",
-      description: "Tailor your documents and integrate them seamlessly",
-      icon: Palette,
-      color: "from-purple-500 to-purple-600",
-      features: [
-        {
-          title: "Custom Branding",
-          description:
-            "Add your logo, colors, and styling to match your brand identity",
-          icon: Palette,
-        },
-        {
-          title: "One-Click Integration",
-          description:
-            "Easily add policies to any website with a simple embed code",
-          icon: Package,
-        },
-        {
-          title: "Multiple Export Formats",
-          description:
-            "Download as HTML, PDF, or plain text for maximum flexibility",
-          icon: Download,
-        },
-        {
-          title: "Mobile Optimization",
-          description: "All documents are fully responsive and mobile-friendly",
-          icon: Smartphone,
-        },
-      ],
-    },
-    {
-      title: "Compliance & Security",
-      description: "Stay compliant with global regulations",
-      icon: Lock,
-      color: "from-emerald-500 to-emerald-600",
-      features: [
-        {
-          title: "GDPR Compliance",
-          description:
-            "Meet European data protection requirements with specialized clauses",
-          icon: Shield,
-        },
-        {
-          title: "CCPA Ready",
-          description: "California Consumer Privacy Act compliance built-in",
-          icon: Shield,
-        },
-        {
-          title: "Privacy by Design",
-          description: "We don't store your data unless you explicitly save it",
-          icon: Lock,
-        },
-        {
-          title: "Regular Legal Updates",
-          description:
-            "Stay current with changing regulations and requirements",
-          icon: RefreshCw,
-        },
-      ],
-    },
-  ];
 
   const advancedFeatures = [
     {
@@ -213,90 +108,17 @@ export default function FeaturesPage() {
                 size="lg"
                 className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white border-0 h-12 px-8 text-lg rounded-full shadow-lg shadow-blue-600/20 hover:shadow-blue-700/30 transition-all duration-300"
               >
-                <Link href={pages.policies.index}>Get Started Free</Link>
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-gray-300 dark:border-gray-700 h-12 px-8 text-lg rounded-full"
-              >
-                View Pricing
+                <Link href="#feature-list">Get Started Free</Link>
               </Button>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Feature categories */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={containerVariants}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-          >
-            {featureCategories.map((category, index) => (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                className="h-full"
-              >
-                <div className="h-full bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 overflow-hidden">
-                  <div
-                    className={`h-2 w-full bg-gradient-to-r ${category.color}`}
-                  ></div>
-                  <div className="p-6">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="relative shrink-0">
-                        <div className="absolute inset-0 bg-blue-100 dark:bg-blue-900/50 rounded-full blur-md opacity-80"></div>
-                        <div
-                          className={`relative z-10 w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-r ${category.color} text-white shadow-md`}
-                        >
-                          <category.icon className="w-6 h-6" />
-                        </div>
-                      </div>
-                      <h2 className="text-xl font-bold dark:text-white">
-                        {category.title}
-                      </h2>
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-300 mb-6">
-                      {category.description}
-                    </p>
-
-                    <ul className="space-y-4">
-                      {category.features.map((feature, featureIndex) => (
-                        <li
-                          key={featureIndex}
-                          className="flex items-start gap-3"
-                        >
-                          <div
-                            className={`w-6 h-6 rounded-full bg-gradient-to-r ${category.color} flex items-center justify-center shrink-0 mt-0.5`}
-                          >
-                            <feature.icon className="w-3.5 h-3.5 text-white" />
-                          </div>
-                          <div>
-                            <h3 className="font-medium dark:text-white">
-                              {feature.title}
-                            </h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                              {feature.description}
-                            </p>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
+      <FeatureList />
 
       {/* Advanced features */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-900">
+      <section className="py-20 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <motion.h2
@@ -372,7 +194,7 @@ export default function FeaturesPage() {
       </section>
 
       {/* Feature comparison */}
-      <section className="py-20">
+      <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <motion.h2
@@ -524,17 +346,8 @@ export default function FeaturesPage() {
                   size="lg"
                   className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white border-0 h-12 px-8 text-lg rounded-full shadow-lg shadow-blue-600/20 hover:shadow-blue-700/30 transition-all duration-300"
                 >
-                  Get Started Free
+                  <Link href="#feature-list">Get Started Free</Link>
                 </Button>
-                <Link href={pages.pricing}>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="border-gray-300 dark:border-gray-700 h-12 px-8 text-lg rounded-full"
-                  >
-                    View Pricing
-                  </Button>
-                </Link>
               </div>
             </div>
           </div>

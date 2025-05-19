@@ -3,6 +3,7 @@
 import { pages } from "@/config/pages";
 import { motion } from "framer-motion";
 import { Lock, Zap, FileText, Package, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function FeaturesSection() {
   const features = [
@@ -68,7 +69,7 @@ export default function FeaturesSection() {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+    <section className="pt-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
           <motion.h2
@@ -131,9 +132,14 @@ export default function FeaturesSection() {
                       {feature.description}
                     </p>
 
-                    <div className="mt-4 inline-flex items-center text-sm font-medium group-hover:text-blue-600 dark:text-gray-300 dark:group-hover:text-blue-400 transition-colors">
-                      <span>Learn more</span>
-                      <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    <div className="mt-4 text-sm font-medium group-hover:text-blue-600 dark:text-gray-300 dark:group-hover:text-blue-400 transition-colors">
+                      <Link
+                        className="inline-flex items-center h-full justify-center"
+                        href={pages.features}
+                      >
+                        <span>Learn more</span>
+                        <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -152,21 +158,7 @@ export default function FeaturesSection() {
           <a
             href={pages.features}
             className="inline-flex items-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
-          >
-            <span>View all features</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 ml-1"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </a>
+          ></a>
         </motion.div>
       </div>
     </section>

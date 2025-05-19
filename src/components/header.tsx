@@ -2,20 +2,20 @@
 
 import type React from "react";
 
-import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
-  SheetTrigger,
+  SheetClose,
   SheetContent,
   SheetTitle,
-  SheetClose,
+  SheetTrigger,
 } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { MenuIcon, FileText, X, ChevronRight, Shield } from "lucide-react";
-import { motion } from "framer-motion";
-import { ThemeToggle } from "./ui/theme-toggle";
 import { pages } from "@/config/pages";
+import { motion } from "framer-motion";
+import { ChevronRight, FileText, MenuIcon, Shield } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { ThemeToggle } from "./ui/theme-toggle";
 
 const NavLink = ({
   href,
@@ -59,22 +59,21 @@ const MobileMenu = ({
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="w-80 backdrop-blur-lg bg-white/90 dark:bg-gray-900/90 border-r border-gray-200 dark:border-gray-800"
+        className="w-80 backdrop-blur-lg p-4 bg-white/90 dark:bg-gray-900/90 border-r border-gray-200 dark:border-gray-800"
       >
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center">
           <SheetTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400">
             OnePolicy
           </SheetTitle>
           <SheetClose asChild>
             <Button variant="ghost" size="icon" className="rounded-full">
-              <X className="h-4 w-4" />
               <span className="sr-only">Close menu</span>
             </Button>
           </SheetClose>
         </div>
 
         <div className="flex flex-col h-full">
-          <div className="px-2 py-4 mb-2 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+          <div className="px-2 py-3 mb-2 mt-0 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
             <p className="text-sm text-gray-600 dark:text-gray-300">
               Generate your legal pages in seconds with our easy-to-use
               platform.
@@ -82,25 +81,32 @@ const MobileMenu = ({
           </div>
 
           <nav className="flex-1 flex flex-col gap-y-1 mt-2">
-            {links.map((link) => {
-              const Icon = link.icon || ChevronRight;
-              return (
-                <SheetClose asChild key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                  >
-                    <Icon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                    <span>{link.label}</span>
-                  </Link>
-                </SheetClose>
-              );
-            })}
+            <>
+              {links.map((link) => {
+                const Icon = link.icon || ChevronRight;
+                return (
+                  <SheetClose asChild key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                    >
+                      <Icon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                      <span>{link.label}</span>
+                    </Link>
+                  </SheetClose>
+                );
+              })}
+              <SheetClose asChild key="start">
+                <Button className="ml-2 mt-8 bg-gradient-to-r h-10 from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0">
+                  <Link href={pages.auth.signup}>Join Now</Link>
+                </Button>
+              </SheetClose>
+            </>
           </nav>
 
-          <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-800">
-            <div className="px-4 flex items-center justify-between">
-              <span className="text-sm text-gray-500 dark:text-gray-400">
+          <div className="mt-auto pt-4 border-t border-gray-300 dark:border-gray-800">
+            <div className=" flex items-center justify-between">
+              <span className="text-sm text-gray-500 px-2 dark:text-gray-400">
                 © 2025 OnePolicy
               </span>
               <ThemeToggle />
@@ -125,8 +131,8 @@ const DesktopNav = ({
     ))}
     <div className="ml-4 flex items-center gap-2 border-l border-gray-200 dark:border-gray-700 pl-4">
       <ThemeToggle />
-      <Button className="ml-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0">
-        Get Started
+      <Button className="ml-2 bg-gradient-to-r h-10 from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0">
+        <Link href={pages.auth.signup}>Join Now</Link>
       </Button>
     </div>
   </nav>
@@ -147,7 +153,6 @@ export default function Navbar() {
   const links = [
     { label: "Home", href: pages.home, icon: Shield },
     { label: "Features", href: pages.features, icon: FileText },
-    { label: "Pricing", href: pages.pricing, icon: FileText },
     { label: "Contact", href: pages.contact, icon: FileText },
   ];
 
@@ -168,7 +173,7 @@ export default function Navbar() {
 
           <div className="flex-1 flex items-center justify-center lg:justify-start">
             <Link
-              href="/"
+              href={pages.home}
               className="flex items-center gap-1 text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400"
             >
               <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />

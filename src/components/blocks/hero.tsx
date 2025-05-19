@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { pages } from "@/config/pages";
 import { motion } from "framer-motion";
 import { Check, ChevronDown, Shield } from "lucide-react";
 import Link from "next/link";
@@ -363,7 +362,7 @@ const OnePolicyHero: React.FC<OnePolicyHeroProps> = ({
               size="lg"
               className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white border-0 h-14 px-8 text-lg rounded-full shadow-lg shadow-blue-600/20 hover:shadow-blue-700/30 transition-all duration-300"
             >
-              <Link href={pages.policies.index}>{primaryButtonText}</Link>
+              <Link href="#feature-list">{primaryButtonText}</Link>
             </Button>
           </div>
 

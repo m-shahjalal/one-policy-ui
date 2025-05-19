@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { CheckCircle, FileText, Send } from "lucide-react";
+import Link from "next/link";
 
 export default function HowItWorks() {
   const steps = [
@@ -96,7 +97,7 @@ export default function HowItWorks() {
             whileTap={{ scale: 0.95 }}
             className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 dark:shadow-gray-900/30"
           >
-            Get Started Now
+            <Link href="#feature-list"> Get Started Now</Link>
           </motion.button>
         </div>
       </div>
