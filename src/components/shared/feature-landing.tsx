@@ -566,7 +566,9 @@ export default function FeatureLandingPage({
       </section>
 
       {/* Testimonials Section */}
-      <section className={`py-16 md:py-24 ${colorMap.section.full}`}>
+      <section
+        className={`py-16 md:py-24 dark:bg-gray-950 ${colorMap.section.full}`}
+      >
         <div className="container max-w-6xl mx-auto px-4 md:px-6">
           <motion.div
             initial="hidden"
