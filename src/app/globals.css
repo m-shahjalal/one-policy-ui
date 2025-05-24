@@ -143,4 +143,8 @@
   .animate-twinkle {
     animation: twinkle var(--duration, 3s) ease-in-out infinite;
   }
+
+  .btn-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0;
+  }
 }

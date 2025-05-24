@@ -139,27 +139,17 @@ export type TImageUploadFieldProps<T extends FieldValues> =
 export type FormRef<T extends FieldValues> = {
   getValues: () => T;
   reset: (values?: Partial<T>) => void;
-  setValue: (name: keyof T, value: T[keyof T]) => void;
+  setValue: <K extends Path<T>>(name: K, value: T[K]) => void;
   formState: FormState<T>;
   control: Control<T>;
   form: UseFormReturn<T>;
 };
 
 export type FormProps<
-  TSchema extends ZodType<FIX_ME, FIX_ME>,
+  TSchema extends ZodType<FIX_ME, FIX_ME, FIX_ME>,
   TFieldValues extends FieldValues = z.infer<TSchema>
 > = {
-  ref?: React.Ref<{
-    getValues: UseFormReturn<TFieldValues>["getValues"];
-    reset: (values?: Partial<TFieldValues>) => void;
-    setValue: <K extends Path<TFieldValues>>(
-      name: K,
-      value: TFieldValues[K]
-    ) => void;
-    formState: UseFormReturn<TFieldValues>["formState"];
-    control: UseFormReturn<TFieldValues>["control"];
-    form: UseFormReturn<TFieldValues>;
-  }>;
+  ref?: React.Ref<FormRef<TFieldValues>> | null;
   initialValues?: DefaultValues<TFieldValues>;
   schema: TSchema;
   submitHandler: (values: TFieldValues) => void;
@@ -174,4 +164,4 @@ export type FormProps<
   }) => React.ReactNode;
   renderDevTools?: boolean;
   mode?: "onChange" | "onBlur" | "onSubmit" | "onTouched" | "all";
-} & React.ComponentPropsWithoutRef<"form">;
+} & Omit<React.ComponentPropsWithoutRef<"form">, "ref">;

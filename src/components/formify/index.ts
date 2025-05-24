@@ -18,5 +18,5 @@ export * from "./components/fields/submit-button";
 // Types
 export * from "./types/form";
 
-// Utils
-export * from "./utils/zod-field-names";
+// Steps
+export * from "./stepper";

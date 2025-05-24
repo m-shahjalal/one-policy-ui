@@ -1,17 +1,23 @@
-'use client';
+"use client";
 
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 import {
-	ArrayPath,
-	FieldValues,
-	useFieldArray,
-	UseFieldArrayReturn,
-	useFormContext,
-} from 'react-hook-form';
+  FieldValues,
+  useFieldArray,
+  UseFieldArrayReturn,
+  useFormContext,
+  ArrayPath,
+} from "react-hook-form";
 
-type FieldArrayProps<T extends FieldValues> = {
-	children: (field: UseFieldArrayReturn<T, ArrayPath<T>>) => ReactNode;
-	name: ArrayPath<T>;
+type FieldArrayProps<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends ArrayPath<TFieldValues> = ArrayPath<TFieldValues>
+> = {
+  children: (field: UseFieldArrayReturn<TFieldValues, TName>) => ReactNode;
+  name: TName;
+  label?: string;
+  description?: string;
+  required?: boolean;
 };
 
 /**
@@ -33,14 +39,38 @@ type FieldArrayProps<T extends FieldValues> = {
  * ```
  */
 
-export const FieldArray = <T extends FieldValues>({
-	children,
-	name,
-}: FieldArrayProps<T>) => {
-	const { control } = useFormContext<T>();
-	const fieldArray = useFieldArray({ control, name });
+export const FieldArray = <
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends ArrayPath<TFieldValues> = ArrayPath<TFieldValues>
+>({
+  children,
+  name,
+  label,
+  description,
+  required,
+}: FieldArrayProps<TFieldValues, TName>) => {
+  const { control } = useFormContext<TFieldValues>();
+  const fieldArray = useFieldArray<TFieldValues, TName>({
+    control,
+    name,
+  });
 
-	return children(fieldArray);
+  return (
+    <div className="space-y-2">
+      {label && (
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            {label}
+            {required && <span className="text-destructive ml-1">*</span>}
+          </label>
+        </div>
+      )}
+      {description && (
+        <p className="text-sm text-muted-foreground">{description}</p>
+      )}
+      {children(fieldArray)}
+    </div>
+  );
 };
 
-FieldArray.displayName = 'FieldArray';
+FieldArray.displayName = "FieldArray";

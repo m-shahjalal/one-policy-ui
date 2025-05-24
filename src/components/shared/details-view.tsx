@@ -205,7 +205,7 @@ export function DetailsViewPage({
                     <Button
                       onClick={copyToClipboard}
                       className="w-full flex items-center justify-center gap-2"
-                      variant={copied ? "outline" : "gradient"}
+                      variant={copied ? "outline" : "default"}
                       size="sm"
                     >
                       {copied ? (
@@ -550,7 +550,7 @@ export function DetailsViewPage({
         <p>
           Disclaimer: Legal information is not legal advice. Read the{" "}
           <a
-            href={pages.ourTerms}
+            href={pages.indoorPolicy.ourTerms}
             className={`text-${themeColors.text} hover:underline`}
           >
             disclaimer

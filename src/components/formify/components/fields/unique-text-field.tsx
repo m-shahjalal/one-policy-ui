@@ -1,3 +1,5 @@
+"use client";
+
 import { Check, Loader2 } from "lucide-react";
 import { JSX, useEffect, useState } from "react";
 import { FieldValues, useFormContext } from "react-hook-form";

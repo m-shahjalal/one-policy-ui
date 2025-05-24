@@ -25,10 +25,10 @@ export default function Footer() {
   ];
 
   const legalLinks = [
-    { label: "Privacy Policy", href: pages.ourPolicy },
-    { label: "Terms of Service", href: pages.ourTerms },
-    { label: "Cookie Policy", href: pages.ourCookie },
-    { label: "GDPR Compliance", href: pages.ourGDPR },
+    { label: "Privacy Policy", href: pages.indoorPolicy.ourPolicy },
+    { label: "Terms of Service", href: pages.indoorPolicy.ourTerms },
+    { label: "Cookie Policy", href: pages.indoorPolicy.ourCookie },
+    { label: "GDPR Compliance", href: pages.indoorPolicy.ourGDPR },
   ];
 
   const resourceLinks = [

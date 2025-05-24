@@ -3,11 +3,14 @@ export const pages = {
   pricing: "/pricing",
   features: "/features",
   contact: "/contact",
-  ourPolicy: "/our-policy",
-  ourPrivacy: "/our-privacy",
-  ourTerms: "/our-terms",
-  ourCookie: "/our-cookie",
-  ourGDPR: "/our-gdpr",
+
+  indoorPolicy: {
+    ourPolicy: "/our-policy",
+    ourPrivacy: "/our-privacy",
+    ourTerms: "/our-terms",
+    ourCookie: "/our-cookie",
+    ourGDPR: "/our-gdpr",
+  },
 
   auth: {
     login: "/auth/login",
@@ -18,50 +21,20 @@ export const pages = {
 
   cookies: {
     index: "/cookie-policy",
-    create: {
-      step1: "/cookies/create/step1",
-      step2: "/cookies/create/step2",
-      step3: "/cookies/create/step3",
-      step4: "/cookies/create/step4",
-    },
-    view: (id: string) => `/cookies/view/${id}`,
-    edit: (id: string) => ({
-      step1: `/cookies/edit/${id}/step1`,
-      step2: `/cookies/edit/${id}/step2`,
-      step3: `/cookies/edit/${id}/step3`,
-      step4: `/cookies/edit/${id}/step4`,
-    }),
+    create: "/cookie-policy/create",
+    view: (id: string) => `/cookie-policy/view/${id}`,
+    edit: (id: string) => `/cookie-policy/${id}/edit`,
   },
   privacies: {
     index: "/privacy-policy",
-    create: {
-      step1: "/policies/create/step1",
-      step2: "/policies/create/step2",
-      step3: "/policies/create/step3",
-      step4: "/policies/create/step4",
-    },
-    view: (id: string) => `/policies/view/${id}`,
-    edit: (id: string) => ({
-      step1: `/policies/edit/${id}/step1`,
-      step2: `/policies/edit/${id}/step2`,
-      step3: `/policies/edit/${id}/step3`,
-      step4: `/policies/edit/${id}/step4`,
-    }),
+    create: "/privacy-policy/create",
+    view: (id: string) => `/privacy-policy/view/${id}`,
+    edit: (id: string) => `/privacy-policy/${id}/edit`,
   },
   terms: {
     index: "/term-conditions",
-    create: {
-      step1: "/terms/create/step1",
-      step2: "/terms/create/step2",
-      step3: "/terms/create/step3",
-      step4: "/terms/create/step4",
-    },
-    view: (id: string) => `/terms/view/${id}`,
-    edit: (id: string) => ({
-      step1: `/terms/edit/${id}/step1`,
-      step2: `/terms/edit/${id}/step2`,
-      step3: `/terms/edit/${id}/step3`,
-      step4: `/terms/edit/${id}/step4`,
-    }),
+    create: "/term-conditions/create",
+    view: (id: string) => `/term-conditions/view/${id}`,
+    edit: (id: string) => `/term-conditions/${id}/edit`,
   },
 };

@@ -1,6 +1,7 @@
 "use client";
 
 import FeatureLandingPage from "@/components/shared/feature-landing";
+import { pages } from "@/config/pages";
 import {
   Cookie,
   Globe,
@@ -138,6 +139,7 @@ export default function CookiePolicyLanding() {
       ctaDescription="Generate a comprehensive, legally compliant cookie policy in minutes. No legal expertise required."
       // URLs
       viewSampleUrl="/cookie-policy/view"
+      generateUrl={pages.cookies.create}
     />
   );
 }

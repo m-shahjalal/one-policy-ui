@@ -82,7 +82,9 @@ export default function FeatureLandingPage({
   faqItems,
   ctaTitle,
   ctaDescription,
+  generateUrl,
 }: FeatureLandingPageProps) {
+  console.log("generateUrl", generateUrl);
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Color mappings based on policy type
@@ -236,19 +238,21 @@ export default function FeatureLandingPage({
               }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <Button
-                size="lg"
-                className={`${colorMap.button.bg} text-white px-8`}
-                style={{
-                  backgroundColor: gradientFrom,
-                  backgroundImage: `linear-gradient(to right, ${gradientFrom}, ${gradientTo})`,
-                }}
-              >
-                Generate{" "}
-                {type === "terms"
-                  ? "Terms & Conditions"
-                  : `${type.charAt(0).toUpperCase() + type.slice(1)} Policy`}
-              </Button>
+              <Link href={generateUrl || ""}>
+                <Button
+                  size="lg"
+                  className={`${colorMap.button.bg} text-white px-8`}
+                  style={{
+                    backgroundColor: gradientFrom,
+                    backgroundImage: `linear-gradient(to right, ${gradientFrom}, ${gradientTo})`,
+                  }}
+                >
+                  Generate{" "}
+                  {type === "terms"
+                    ? "Terms & Conditions"
+                    : `${type.charAt(0).toUpperCase() + type.slice(1)} Policy`}
+                </Button>
+              </Link>
             </motion.div>
           </div>
 
