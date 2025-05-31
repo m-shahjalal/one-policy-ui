@@ -14,8 +14,8 @@ export function Step4Form({
 }) {
   const { watch } = useFormContext<CookieForm>();
 
-  // Watch for preferred contact method to show relevant fields
-  const preferredContactMethod = watch("stepFour.preferredContactMethod");
+  const preferredContactMethod =
+    watch("stepFour.preferredContactMethod") ?? "email";
 
   return (
     <div className="space-y-6">
@@ -23,7 +23,7 @@ export function Step4Form({
         <h1 className="text-3xl font-bold mb-4">{title}</h1>
         <p className="text-lg text-gray-600">{description}</p>
       </div>
-      <Card>
+      <Card variant="glass" className="border border-border">
         <CardContent className="pt-6">
           <h3 className="text-base font-medium mb-4">Contact Information</h3>
           <p className="text-sm text-muted-foreground mb-4">

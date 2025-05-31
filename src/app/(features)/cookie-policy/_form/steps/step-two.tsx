@@ -16,7 +16,9 @@ export function Step2Form({
   title: string;
   description: string;
 }) {
-  const { watch } = useFormContext<CookieForm>();
+  const { watch, formState, getValues, register } =
+    useFormContext<CookieForm>();
+  console.log("formState", formState.errors, getValues());
 
   // Watch for persistent cookie selection and third party selection
   const persistent = watch("stepTwo.cookieDuration.persistent");
@@ -28,9 +30,10 @@ export function Step2Form({
         <h1 className="text-3xl font-bold mb-4">{title}</h1>
         <p className="text-lg text-gray-600">{description}</p>
       </div>
+
       {/* Cookie Types */}
-      <Card>
-        <CardContent className="pt-6">
+      <Card variant="glass" className="border border-border">
+        <CardContent>
           <h3 className="text-base font-medium mb-4">Cookie Types</h3>
           <p className="text-sm text-muted-foreground mb-4">
             Select the types of cookies your website uses
@@ -76,8 +79,8 @@ export function Step2Form({
       </Card>
 
       {/* Cookie Duration */}
-      <Card>
-        <CardContent className="pt-6">
+      <Card variant="glass" className="border border-border">
+        <CardContent>
           <h3 className="text-base font-medium mb-4">Cookie Duration</h3>
           <p className="text-sm text-muted-foreground mb-4">
             How long do your cookies remain active?
@@ -115,8 +118,8 @@ export function Step2Form({
       </Card>
 
       {/* Cookie Origin */}
-      <Card>
-        <CardContent className="pt-6">
+      <Card variant="glass" className="border border-border">
+        <CardContent>
           <h3 className="text-base font-medium mb-4">Cookie Origin</h3>
           <p className="text-sm text-muted-foreground mb-4">
             Where do your cookies originate from?
@@ -142,26 +145,47 @@ export function Step2Form({
                   description="List the domains that set third-party cookies"
                   required
                 >
-                  {({ fields, append, remove }) => (
+                  {({ fields, append, remove, getFieldError }) => (
                     <div className="space-y-2">
                       {fields.map((field, index) => (
-                        <div key={field.id} className="flex gap-2">
-                          <Input placeholder="https://example.com" {...field} />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            onClick={() => remove(index)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                        <div key={field.id} className="space-y-1">
+                          <div className="flex gap-2">
+                            <div className="flex-1">
+                              <Input
+                                placeholder="https://example.com"
+                                {...register(
+                                  `stepTwo.cookieOrigin.thirdPartyURLList.${index}` as const
+                                )}
+                                className={
+                                  getFieldError(index)
+                                    ? "border-destructive"
+                                    : ""
+                                }
+                              />
+                              {/* Display error message for this specific field */}
+                              {getFieldError(index) && (
+                                <p className="text-sm text-destructive mt-1">
+                                  {getFieldError(index)?.message}
+                                </p>
+                              )}
+                            </div>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              onClick={() => remove(index)}
+                              disabled={fields.length === 1} // Prevent removing the last field if required
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       ))}
                       <Button
                         type="button"
-                        variant="outline"
+                        variant="gradient"
                         onClick={() => append("")}
-                        className="w-full"
+                        className="w-full h-10"
                       >
                         <Plus className="h-4 w-4 mr-2" />
                         Add Third-Party URL

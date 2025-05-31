@@ -176,7 +176,7 @@ export default function FeatureLandingPage({
           ></div>
         </div>
 
-        <div className="container relative z-10 max-w-6xl mx-auto px-4 md:px-6">
+        <div className="container relative z-10 max-w-7xl mx-auto px-4 md:px-6">
           <div className="flex flex-col items-center text-center mb-12 md:mb-16">
             <motion.div
               initial="hidden"
@@ -305,7 +305,7 @@ export default function FeatureLandingPage({
 
       {/* Features Section */}
       <section className="py-16 md:py-24 bg-white dark:bg-gray-950">
-        <div className="container max-w-6xl mx-auto px-4 md:px-6">
+        <div className="container max-w-7xl mx-auto px-4 md:px-6">
           <motion.div
             initial="active"
             whileInView="visible"
@@ -454,7 +454,7 @@ export default function FeatureLandingPage({
       <section
         className={`py-16 md:py-24 bg-gradient-to-b from-white ${colorMap.section.bg}`}
       >
-        <div className="container max-w-6xl mx-auto px-4 md:px-6">
+        <div className="container max-w-7xl mx-auto px-4 md:px-6">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -563,7 +563,7 @@ export default function FeatureLandingPage({
                 backgroundImage: `linear-gradient(to right, ${gradientFrom}, ${gradientTo})`,
               }}
             >
-              Get Started Now
+              <Link href={generateUrl ?? "#"}> Get Started Now</Link>
             </Button>
           </motion.div>
         </div>
@@ -573,7 +573,7 @@ export default function FeatureLandingPage({
       <section
         className={`py-16 md:py-24 dark:bg-gray-950 ${colorMap.section.full}`}
       >
-        <div className="container max-w-6xl mx-auto px-4 md:px-6">
+        <div className="container max-w-7xl mx-auto px-4 md:px-6">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -722,7 +722,7 @@ export default function FeatureLandingPage({
           backgroundImage: `linear-gradient(to bottom right, ${gradientFrom}, ${gradientTo})`,
         }}
       >
-        <div className="container max-w-6xl mx-auto px-4 md:px-6">
+        <div className="container max-w-7xl mx-auto px-4 md:px-6">
           <Card className="border-0 shadow-xl bg-white/10 backdrop-blur-sm">
             <CardContent className="p-8 md:p-12">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">

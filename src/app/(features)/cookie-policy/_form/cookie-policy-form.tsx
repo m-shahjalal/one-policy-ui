@@ -1,8 +1,12 @@
 "use client";
 
 import { Form, FormRef, Stepper } from "formify";
-import { CookieForm, cookieFormSchema } from "./schema";
-import { Step1Form, Step2Form, Step3Form, Step4Form } from "./steps";
+import {
+  CookieForm,
+  cookieFormDefaultValues,
+  cookieFormSchema,
+} from "./schema";
+import { Step1Form, Step2Form, Step3Form, Step4Form } from ".";
 import { useRef } from "react";
 import { useTriggerForm } from "@/components/formify/hooks/useTrigger";
 
@@ -52,6 +56,7 @@ export function CookiePolicyForm({ initial }: { initial?: CookieForm }) {
 
   const clickSubmit = () => {
     submitRef.current?.click();
+    console.info("Submitted", formRef.current?.form?.getValues());
   };
 
   return (
@@ -60,7 +65,7 @@ export function CookiePolicyForm({ initial }: { initial?: CookieForm }) {
         ref={formRef}
         submitHandler={clickSubmit}
         schema={cookieFormSchema}
-        initialValues={initial}
+        initialValues={initial ? initial : cookieFormDefaultValues}
       >
         <Stepper onComplete={clickSubmit}>
           {steps.map((item) => (

@@ -41,15 +41,27 @@ export const cookieStepOne = z
 
 // STEP 2: Cookie Usage Information
 export const cookieStepTwo = z.object({
-  cookieTypes: z.object({
-    necessary: z.boolean().default(true),
-    preferences: z.boolean().default(false),
-    analytics: z.boolean().default(false),
-    advertising: z.boolean().default(false),
-    socialMedia: z.boolean().default(false),
-    content: z.boolean().default(false),
-    personalization: z.boolean().default(false),
-  }),
+  cookieTypes: z
+    .object({
+      necessary: z.boolean().default(true),
+      preferences: z.boolean().default(false),
+      analytics: z.boolean().default(false),
+      advertising: z.boolean().default(false),
+      socialMedia: z.boolean().default(false),
+      content: z.boolean().default(false),
+      personalization: z.boolean().default(false),
+    })
+    .refine((value) => {
+      return (
+        value.necessary ||
+        value.preferences ||
+        value.analytics ||
+        value.advertising ||
+        value.socialMedia ||
+        value.content ||
+        value.personalization
+      );
+    }),
 
   cookieDuration: z.object({
     session: z.boolean().default(true),
@@ -69,51 +81,97 @@ export const cookieStepTwo = z.object({
     .object({
       firstParty: z.boolean().default(true),
       thirdParty: z.boolean().default(false),
-      thirdPartyURLList: z.array(z.string().url()).optional(),
+      thirdPartyURLList: z
+        .array(z.string().url({ message: "Please enter a valid URL" }))
+        .optional(),
     })
     .refine(
       (value) => {
         if (value.thirdParty) {
           return (
             value.thirdPartyURLList !== undefined &&
-            value.thirdPartyURLList.length > 0
+            value.thirdPartyURLList.length > 0 &&
+            value.thirdPartyURLList.every((url) => url.trim() !== "")
           );
         }
         return true;
       },
       {
         message:
-          "At least one third-party URL is required when third-party cookies are enabled",
+          "At least one valid third-party URL is required when third-party cookies are enabled",
         path: ["thirdPartyURLList"],
       }
     ),
 });
 
 // STEP 3: Compliance & Consent
-export const cookieStepThree = z.object({
-  compliance: z.object({
-    gdpr: z.boolean().default(false),
-    ccpa: z.boolean().default(false),
-    other: z.boolean().default(false),
-    otherCompliance: z.string().optional(),
-  }),
-  consentManagement: z.object({
-    banner: z.boolean().default(false),
-    acceptRejectButtons: z.boolean().default(false),
-    categorySelection: z.boolean().default(true),
-    addLinks: z.boolean().default(false),
-    consentExpiry: z
-      .enum([
-        "session",
-        "up_to_30_days",
-        "up_to_90_days",
-        "up_to_180_days",
-        "up_to_365_days",
-        "forever",
-      ])
-      .optional(),
-  }),
-});
+export const cookieStepThree = z
+  .object({
+    compliance: z
+      .object({
+        gdpr: z.boolean().default(false),
+        ccpa: z.boolean().default(false),
+        other: z.boolean().default(false),
+        otherCompliance: z.string().optional(),
+      })
+      .refine(
+        (value) => {
+          if (value.other) {
+            return (
+              value.otherCompliance !== undefined &&
+              value.otherCompliance.trim() !== ""
+            );
+          }
+          return true;
+        },
+        {
+          message: "Please specify other compliance requirements",
+          path: ["otherCompliance"],
+        }
+      ),
+    consentManagement: z
+      .object({
+        banner: z.boolean().default(false),
+        acceptRejectButtons: z.boolean().default(false),
+        categorySelection: z.boolean().default(true),
+        addLinks: z.boolean().default(false),
+        consentExpiry: z
+          .enum([
+            "session",
+            "up_to_30_days",
+            "up_to_90_days",
+            "up_to_180_days",
+            "up_to_365_days",
+            "forever",
+          ])
+          .optional(),
+      })
+      .refine(
+        (value) => {
+          if (value.banner) {
+            return value.consentExpiry !== undefined;
+          }
+          return true;
+        },
+        {
+          message:
+            "Please select consent expiry duration when using cookie banner",
+          path: ["consentExpiry"],
+        }
+      ),
+  })
+  .refine(
+    (data) => {
+      // At least one compliance requirement must be selected
+      return (
+        data.compliance.gdpr || data.compliance.ccpa || data.compliance.other
+      );
+    },
+    {
+      message: "Please select at least one compliance requirement",
+      path: ["compliance"],
+    }
+  );
 
 // STEP 4: Contact Information
 export const cookieStepFour = z
@@ -164,7 +222,7 @@ export const cookieStepFour = z
       const fieldName = fieldMap[data.preferredContactMethod];
 
       return {
-        message: `${fieldName} is required`,
+        message: `${fieldName} is required for your preferred contact method`,
         path: [
           data.preferredContactMethod === "mail"
             ? "mailingAddress"
