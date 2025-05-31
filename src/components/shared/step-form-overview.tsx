@@ -46,7 +46,7 @@ export function OverviewForm({ title, description, steps }: OverviewProps) {
   };
 
   // Format different value types with enhanced styling
-  const formatValue = (value: any): React.ReactNode => {
+  const formatValue = (value: FIX_ME): React.ReactNode => {
     if (value === null || value === undefined || value === "") {
       return <span className="text-muted-foreground italic">Not provided</span>;
     }
@@ -91,7 +91,7 @@ export function OverviewForm({ title, description, steps }: OverviewProps) {
 
   // Enhanced object renderer with better styling
   const renderObject = (
-    obj: any,
+    obj: FIX_ME,
     parentKey = "",
     level = 0
   ): React.ReactNode[] => {
@@ -155,7 +155,7 @@ export function OverviewForm({ title, description, steps }: OverviewProps) {
   };
 
   // Enhanced step renderer
-  const renderStep = (stepKey: string, stepData: any, index: number) => {
+  const renderStep = (stepKey: string, stepData: FIX_ME, index: number) => {
     const items = renderObject(stepData);
 
     if (items.length === 0) {

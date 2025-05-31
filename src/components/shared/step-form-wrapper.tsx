@@ -1,9 +1,9 @@
 "use client";
 
-import type React from "react";
-import { motion } from "framer-motion";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { CardHeader, CardTitle } from "@/components/ui/card";
+import { motion } from "framer-motion";
+import type React from "react";
 
 interface StepWrapperProps {
   title: string;

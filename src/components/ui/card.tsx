@@ -1,5 +1,5 @@
-import type * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
+import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -62,14 +62,7 @@ interface CardProps
   asChild?: boolean;
 }
 
-function Card({
-  className,
-  variant,
-  size,
-  interactive,
-  asChild,
-  ...props
-}: CardProps) {
+function Card({ className, variant, size, interactive, ...props }: CardProps) {
   return (
     <div
       data-slot="card"
@@ -241,17 +234,17 @@ function GlowCard({ className, children, ...props }: CardProps) {
 
 export {
   Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
   CardAction,
-  CardDescription,
   CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
   // Enhanced variants
   FeatureCard,
   GlassCard,
-  GradientCard,
   GlowCard,
+  GradientCard,
   // Types
   type CardProps,
 };

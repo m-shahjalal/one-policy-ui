@@ -29,7 +29,6 @@ function Calendar({
   className,
   classNames,
   showOutsideDays = true,
-  yearRange = 50,
   ...props
 }: CalendarProps & { yearRange?: number }) {
   return (

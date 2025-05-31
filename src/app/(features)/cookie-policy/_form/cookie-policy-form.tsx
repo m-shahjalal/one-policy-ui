@@ -10,8 +10,10 @@ import {
   cookieFormDefaultValues,
   cookieFormSchema,
 } from "./schema";
-import { StepConfig } from "./steps/overview";
-import { OverviewForm } from "@/components/shared/step-form-overview";
+import {
+  OverviewForm,
+  StepConfig,
+} from "@/components/shared/step-form-overview";
 
 const steps: StepConfig[] = [
   {

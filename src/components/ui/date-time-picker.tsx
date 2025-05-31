@@ -1,4 +1,4 @@
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import type { CalendarProps } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import {
@@ -8,13 +8,8 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { add, format } from "date-fns";
-import { type Locale, enUS } from "date-fns/locale";
-import {
-  Calendar as CalendarIcon,
-  ChevronLeft,
-  ChevronRight,
-  Clock,
-} from "lucide-react";
+import { enUS } from "date-fns/locale";
+import { Calendar as CalendarIcon, Clock } from "lucide-react";
 import * as React from "react";
 import { useImperativeHandle, useRef } from "react";
 
@@ -229,30 +224,12 @@ function display12HourValue(hours: number) {
   return `0${hours % 12}`;
 }
 
-function genMonths(
-  locale: Pick<Locale, "options" | "localize" | "formatLong">
-) {
-  return Array.from({ length: 12 }, (_, i) => ({
-    value: i,
-    label: format(new Date(2021, i), "MMMM", { locale }),
-  }));
-}
-
-function genYears(yearRange = 50) {
-  const today = new Date();
-  return Array.from({ length: yearRange * 2 + 1 }, (_, i) => ({
-    value: today.getFullYear() - yearRange + i,
-    label: (today.getFullYear() - yearRange + i).toString(),
-  }));
-}
-
 // ---------- utils end ----------
 
 function Calendar({
   className,
   classNames,
   showOutsideDays = true,
-  yearRange = 50,
   ...props
 }: CalendarProps & { yearRange?: number }) {
   return (
