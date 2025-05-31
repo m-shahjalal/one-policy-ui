@@ -20,7 +20,7 @@ const cardVariants = cva(
         glass: [
           "bg-white/10 dark:bg-white/5 text-foreground backdrop-blur-md border-white/20 dark:border-white/10",
           "shadow-lg shadow-black/5 dark:shadow-black/20",
-          "hover:bg-white/15 dark:hover:bg-white/10 hover:shadow-xl hover:-translate-y-0.5",
+          "hover:bg-white/5 dark:hover:bg-white/0 hover:shadow-xl",
           "before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none",
         ],
         gradient: [

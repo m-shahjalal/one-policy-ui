@@ -5,13 +5,24 @@ import { useFormContext } from "react-hook-form";
 import type { CookieForm } from "../schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { DateField } from "@/components/formify/components/fields/DateField";
+import { StepWrapper } from "@/components/shared/step-form-wrapper";
 
 export function Step1Form({
   title,
   description,
+  icon,
+  color,
+  bgColor,
+  borderColor,
+  stepNumber,
 }: {
   title: string;
   description: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  color: string;
+  bgColor: string;
+  borderColor: string;
+  stepNumber?: number;
 }) {
   const { watch } = useFormContext<CookieForm>();
 
@@ -20,12 +31,16 @@ export function Step1Form({
   const isPersonal = entityType === "individual";
 
   return (
-    <div className="space-y-6">
-      <div className="rounded-lg pb-8">
-        <h1 className="text-3xl font-bold mb-4">{title}</h1>
-        <p className="text-lg text-gray-600">{description}</p>
-      </div>
-      <Card variant="glass" className="border border-border">
+    <StepWrapper
+      title={title}
+      description={description}
+      icon={icon}
+      color={color}
+      bgColor={bgColor}
+      borderColor={borderColor}
+      stepNumber={stepNumber}
+    >
+      <Card variant="glass" className="border border-border/50 shadow-none">
         <CardContent>
           <div className="space-y-4">
             <TextField<CookieForm>
@@ -60,7 +75,7 @@ export function Step1Form({
       </Card>
 
       {!isPersonal && (
-        <Card variant="glass" className="border border-border">
+        <Card variant="glass" className="border border-border/50 shadow-none">
           <CardContent>
             <h3 className="text-base font-medium mb-4">
               Organization Information
@@ -85,7 +100,7 @@ export function Step1Form({
         </Card>
       )}
 
-      <Card variant="glass" className="border border-border">
+      <Card variant="glass" className="border border-border/50 shadow-none">
         <CardContent>
           <h3 className="text-base font-medium mb-4">Jurisdiction</h3>
           <div className="space-y-4">
@@ -114,7 +129,7 @@ export function Step1Form({
         </CardContent>
       </Card>
 
-      <Card variant="glass" className="border border-border">
+      <Card variant="glass" className="border border-border/50 shadow-none">
         <CardContent>
           <h3 className="text-base font-medium mb-4">Policy Dates</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -131,6 +146,6 @@ export function Step1Form({
           </div>
         </CardContent>
       </Card>
-    </div>
+    </StepWrapper>
   );
 }

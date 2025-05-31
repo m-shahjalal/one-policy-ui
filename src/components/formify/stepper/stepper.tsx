@@ -13,6 +13,7 @@ import {
   useStepperContext,
 } from "./stepper.context";
 import { useStepContent } from "./stepper.hook";
+import { Card } from "@/components/ui/card";
 
 export type StepProps = {
   children: ReactNode;
@@ -109,6 +110,7 @@ const StepContent = ({
     steps,
     isProcessing,
   } = useStepContent(children);
+  const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
 
   return (
     <div
@@ -219,58 +221,90 @@ const StepContent = ({
             >
               {steps[currentStep - 1]}
             </motion.div>
+          </AnimatePresence>
+
+          <Card
+            className="p-6 pb-0 mt-8 border border-border/50"
+            variant="glass"
+          >
             {/* Progress indicator */}
-            <div className="w-full bg-muted h-8 rounded-full overflow-hidden mt-8 relative shadow-md">
+            <div className="w-full bg-muted h-3 rounded-full overflow-hidden relative shadow-inner">
               <div
-                className="bg-primary h-full transition-all duration-700 ease-in-out rounded-full"
+                className="btn-gradient h-full transition-all duration-700 ease-in-out rounded-full relative"
                 style={{
-                  width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%`,
+                  width: `${progressPercentage}%`,
                 }}
-              />
-              <div className="w-full absolute inset-0 flex justify-center items-center text-sm font-semibold text-primary drop-shadow-sm">
-                {`${Math.min(
-                  parseFloat(
-                    (((currentStep - 1) / (totalSteps - 1)) * 100).toFixed(0)
-                  ),
-                  100
-                )}%`}
+              >
+                {/* Animated shimmer effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse rounded-full" />
+              </div>
+
+              {/* Step markers on progress bar */}
+              <div className="absolute inset-0 flex justify-between items-center px-1">
+                {Array.from({ length: totalSteps }, (_, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      "w-2 h-2 rounded-full border-2 transition-all duration-300",
+                      index < currentStep
+                        ? "bg-white border-primary shadow-sm"
+                        : index === currentStep - 1
+                        ? "bg-primary border-primary-foreground animate-pulse shadow-md"
+                        : "bg-muted-foreground/50 border-muted"
+                    )}
+                  />
+                ))}
               </div>
             </div>
-          </AnimatePresence>
-        </div>
-      </div>
 
-      {/* Navigation buttons */}
-      <div className="flex justify-between py-4 border-t">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={handlePrevious}
-          disabled={currentStep === 1 || isProcessing}
-          className="gap-2"
-        >
-          Previous
-        </Button>
-        <Button
-          type="button"
-          onClick={() => handleNext(onComplete)}
-          disabled={isProcessing}
-          className="gap-2"
-        >
-          {isProcessing ? (
-            <>
-              <div className="h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-              Processing...
-            </>
-          ) : currentStep === totalSteps ? (
-            completeLabel
-          ) : (
-            <>
-              Next
-              <ChevronRightIcon className="h-4 w-4" />
-            </>
-          )}
-        </Button>
+            {/* Navigation buttons */}
+            <div className="flex justify-between items-center pb-4 border-border/50">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handlePrevious}
+                disabled={currentStep === 1 || isProcessing}
+                className="gap-2 hover:bg-muted/50 transition-colors duration-200"
+              >
+                Previous
+              </Button>
+
+              <div className="text-center">
+                <div className="text-sm font-medium text-foreground">
+                  {currentStep <= totalSteps - 1 ? currentStep : totalSteps - 1}{" "}
+                  of {totalSteps - 1}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {Math.round(progressPercentage)}% complete
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                onClick={() => handleNext(onComplete)}
+                disabled={isProcessing}
+                className="gap-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all duration-200 shadow-lg"
+              >
+                {isProcessing ? (
+                  <>
+                    <div className="h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                    Processing...
+                  </>
+                ) : currentStep === totalSteps ? (
+                  <>
+                    <CheckIcon className="h-4 w-4" />
+                    {completeLabel}
+                  </>
+                ) : (
+                  <>
+                    Next
+                    <ChevronRightIcon className="h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </div>
+          </Card>
+        </div>
       </div>
     </div>
   );
