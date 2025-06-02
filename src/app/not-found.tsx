@@ -25,9 +25,9 @@ export default function NotFound() {
 
   // Suggested pages
   const suggestedPages = [
-    { name: "Privacy Policy", href: "/privacy-policy" },
-    { name: "Terms & Conditions", href: "/terms" },
-    { name: "Cookie Policy", href: "/cookie-policy" },
+    { name: "Privacy Policy", href: pages.policies.privacy.index },
+    { name: "Terms & Conditions", href: pages.policies.term.index },
+    { name: "Cookie Policy", href: pages.policies.cookies.index },
     { name: "Home", href: "/" },
   ];
 

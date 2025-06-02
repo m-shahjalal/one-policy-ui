@@ -137,9 +137,8 @@ export default function CookiePolicyLanding() {
       // CTA
       ctaTitle="Ready to Create Your Cookie Policy?"
       ctaDescription="Generate a comprehensive, legally compliant cookie policy in minutes. No legal expertise required."
-      // URLs
-      viewSampleUrl="/cookie-policy/view"
-      generateUrl={pages.cookies.create}
+      viewSampleUrl={pages.policies.cookies.index}
+      generateUrl={pages.policies.cookies.create}
     />
   );
 }

@@ -19,22 +19,19 @@ export const pages = {
     resetPass: "/auth/reset-password",
   },
 
-  cookies: {
-    index: "/cookie-policy",
-    create: "/cookie-policy/create",
-    view: (id: string) => `/cookie-policy/view/${id}`,
-    edit: (id: string) => `/cookie-policy/${id}/edit`,
-  },
-  privacies: {
-    index: "/privacy-policy",
-    create: "/privacy-policy/create",
-    view: (id: string) => `/privacy-policy/view/${id}`,
-    edit: (id: string) => `/privacy-policy/${id}/edit`,
-  },
-  terms: {
-    index: "/term-conditions",
-    create: "/term-conditions/create",
-    view: (id: string) => `/term-conditions/view/${id}`,
-    edit: (id: string) => `/term-conditions/${id}/edit`,
+  policies: {
+    cookies: {
+      index: "/cookie-policy",
+      create: "/cookie-policy/create",
+      view: (slug: string) => `/cookie-policy/${slug}`,
+      edit: (slug: string) => `/cookie-policy/${slug}/edit`,
+    },
+    privacy: {
+      index: "/policy/privacy",
+      create: "/policy/privacy",
+    },
+    term: {
+      index: "/policy/term",
+    },
   },
 };

@@ -18,7 +18,6 @@ export function Step2Form({
 }) {
   const { watch, formState, getValues, register } =
     useFormContext<CookieForm>();
-  console.log("formState", formState.errors, getValues());
 
   // Watch for persistent cookie selection and third party selection
   const persistent = watch("stepTwo.cookieDuration.persistent");

@@ -5,7 +5,10 @@ import Footer from "@/components/footer";
 import Navbar from "@/components/header";
 import { ThemeProvider } from "next-themes";
 import { useEffect, useState } from "react";
+import { SWRConfig } from "swr";
 import FullPageLoader from "./page-loader";
+import fetch from "@/lib/fetcher";
+import { pages } from "@/config/pages";
 
 function ProviderInner({ children }: { children: React.ReactNode }) {
   const [cookieConsent, setCookieConsent] = useState<boolean | null>(null);
@@ -32,18 +35,25 @@ function ProviderInner({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <Navbar />
-      {children}
-      <Footer />
-      {cookieConsent === null && (
-        <CookieConsent
-          onAccept={handleAcceptCookies}
-          onDecline={handleDeclineCookies}
-          cookiePolicyUrl="/cookie-policy"
-        />
-      )}
-    </ThemeProvider>
+    <SWRConfig
+      value={{
+        refreshInterval: 3000,
+        fetcher: (r) => fetch.get(r).then((r) => r.data),
+      }}
+    >
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <Navbar />
+        {children}
+        <Footer />
+        {cookieConsent === null && (
+          <CookieConsent
+            onAccept={handleAcceptCookies}
+            onDecline={handleDeclineCookies}
+            cookiePolicyUrl={pages.policies.cookies.index}
+          />
+        )}
+      </ThemeProvider>
+    </SWRConfig>
   );
 }
 

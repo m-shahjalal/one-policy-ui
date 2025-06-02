@@ -1,19 +1,26 @@
 "use client";
 
 import { useTriggerForm } from "@/components/formify/hooks/useTrigger";
+import {
+  OverviewForm,
+  StepConfig,
+} from "@/components/shared/step-form-overview";
 import { Form, FormRef, Stepper } from "formify";
 import { CookieIcon, GlobeIcon, MailIcon, ShieldIcon } from "lucide-react";
 import { createElement, useRef } from "react";
+import useSWRMutation from "swr/mutation";
 import { Step1Form, Step2Form, Step3Form, Step4Form } from ".";
 import {
   CookieForm,
   cookieFormDefaultValues,
   cookieFormSchema,
 } from "./schema";
-import {
-  OverviewForm,
-  StepConfig,
-} from "@/components/shared/step-form-overview";
+import { createOrUpdatePolicy as creator } from "@/lib/mutate-form";
+import { FullpageLoader } from "@/components/shared/full-ui-loader";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { pages } from "@/config/pages";
+import { API } from "@/config/apis";
 
 const steps: StepConfig[] = [
   {
@@ -63,52 +70,68 @@ const steps: StepConfig[] = [
 ];
 
 export function CookiePolicyForm({ initial }: { initial?: CookieForm }) {
+  const router = useRouter();
+  const { data, isMutating, trigger, error } = useSWRMutation(
+    API.cookies.create,
+    creator
+  );
   const formRef = useRef<FormRef<CookieForm>>(null);
-  const submitRef = useRef<HTMLButtonElement>(null);
   const triggerForm = useTriggerForm<CookieForm>();
 
   const clickSubmit = () => {
-    submitRef.current?.click();
-    console.info("Submitted", formRef.current?.form?.getValues());
+    trigger({ formData: formRef.current?.form.watch() });
+
+    if (error) {
+      toast.error("Something went wrong, please try again later");
+      return;
+    }
+
+    toast.success("Cookie policy generated successfully.");
+    router.push(pages.policies.cookies.view(data?.data.data.ID));
   };
 
   return (
     <div className="space-y-8">
-      <Form
-        ref={formRef}
-        submitHandler={clickSubmit}
-        schema={cookieFormSchema}
-        initialValues={initial ? initial : cookieFormDefaultValues}
-      >
-        <Stepper onComplete={clickSubmit}>
-          {steps.map(({ component, stepNumber, ...rest }) => (
-            <Stepper.Step
-              validate={() => {
-                const stepValidationMap: Record<number, string[]> = {
-                  1: ["stepOne"],
-                  2: ["stepTwo"],
-                  3: ["stepThree"],
-                  4: ["stepFour"],
-                };
-                return triggerForm(
-                  formRef.current?.form,
-                  (stepValidationMap[stepNumber] || []) as FIX_ME[]
-                );
-              }}
-              key={stepNumber}
-            >
-              {createElement(component, rest)}
+      {isMutating ? (
+        <FullpageLoader />
+      ) : (
+        <Form
+          ref={formRef}
+          submitHandler={clickSubmit}
+          schema={cookieFormSchema}
+          initialValues={initial ? initial : cookieFormDefaultValues}
+          onSubmit={clickSubmit}
+        >
+          <Stepper onComplete={clickSubmit}>
+            {steps.map(({ component, stepNumber, ...rest }) => (
+              <Stepper.Step
+                validate={() => {
+                  const stepValidationMap: Record<number, string[]> = {
+                    1: ["stepOne"],
+                    2: ["stepTwo"],
+                    3: ["stepThree"],
+                    4: ["stepFour"],
+                  };
+                  return triggerForm(
+                    formRef.current?.form,
+                    (stepValidationMap[stepNumber] || []) as FIX_ME[]
+                  );
+                }}
+                key={stepNumber}
+              >
+                {createElement(component, rest)}
+              </Stepper.Step>
+            ))}
+            <Stepper.Step>
+              <OverviewForm
+                title="Review and Submit"
+                description="Please review all the information before submitting. You can go back to any step to make changes."
+                steps={steps}
+              />
             </Stepper.Step>
-          ))}
-          <Stepper.Step>
-            <OverviewForm
-              title="Review and Submit"
-              description="Please review all the information before submitting. You can go back to any step to make changes."
-              steps={steps}
-            />
-          </Stepper.Step>
-        </Stepper>
-      </Form>
+          </Stepper>
+        </Form>
+      )}
     </div>
   );
 }

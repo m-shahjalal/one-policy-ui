@@ -60,8 +60,6 @@ export default function LoginForm() {
     setIsLoading(true);
     setError(null);
 
-    console.log(data);
-
     try {
       // Here you would normally make an API call to authenticate
       // For now we're using a mock response
@@ -86,7 +84,6 @@ export default function LoginForm() {
 
   // Mock function to simulate API call - replace with actual API call
   async function mockLoginApi(data: LoginFormValues) {
-    console.log("data", data);
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
 

@@ -84,7 +84,6 @@ export default function FeatureLandingPage({
   ctaDescription,
   generateUrl,
 }: FeatureLandingPageProps) {
-  console.log("generateUrl", generateUrl);
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Color mappings based on policy type

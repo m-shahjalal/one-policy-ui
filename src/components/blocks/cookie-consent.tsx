@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Cookie, X, ChevronRight, Shield } from "lucide-react";
 import Link from "next/link";
+import { pages } from "@/config/pages";
 
 interface CookieConsentProps {
   onAccept: () => void;
@@ -15,7 +16,7 @@ interface CookieConsentProps {
 export default function CookieConsent({
   onAccept,
   onDecline,
-  cookiePolicyUrl = "/cookie-policy",
+  cookiePolicyUrl = pages.policies.cookies.index,
 }: CookieConsentProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [showDetails, setShowDetails] = useState(false);

@@ -34,7 +34,7 @@ const loginSchema = z.object({
 // Use the form
 export function LoginForm() {
   const handleSubmit = (data: z.infer<typeof loginSchema>) => {
-    console.log(data);
+    console.info(data);
   };
 
   return (

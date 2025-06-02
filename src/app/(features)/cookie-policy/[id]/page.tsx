@@ -1,8 +1,10 @@
 "use client";
 
 import { DetailsViewPage } from "@/components/shared/details-view";
+import { use } from "react";
 
-export default function CookiePolicyPage() {
+export default function CookiePolicyPage({ params }: { params: string }) {
+  console.error(use(params as FIX_ME));
   const lastUpdated = "May 18, 2025";
   const effectiveDate = "May 18, 2025";
 

@@ -3,11 +3,11 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const fetcher = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api",
+  baseURL: process.env.API_URL || "http://localhost:4000",
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // ensure cookies are sent in requests
+  withCredentials: true,
 });
 
 // Request interceptor for auth token from cookies
