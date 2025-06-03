@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { pages } from "@/config/pages";
+import { pages } from "@/config/routes";
 import { motion } from "framer-motion";
 import { Check, FileText, Globe, Shield } from "lucide-react";
 import Link from "next/link";
@@ -12,7 +12,7 @@ const policyDocuments = [
     description:
       "Comprehensive privacy policy that builds trust with your users while keeping your business compliant with global regulations.",
     icon: Shield,
-    link: pages.privacies.index,
+    link: pages.policies.privacies.index,
     color: "from-blue-500 to-blue-600",
     bgColor: "bg-blue-50 dark:bg-blue-900/30",
     textColor: "text-blue-700 dark:text-blue-300",
@@ -29,7 +29,7 @@ const policyDocuments = [
     description:
       "Protect your business with comprehensive terms of service that clearly outline user rights, responsibilities and limitations.",
     icon: FileText,
-    link: pages.terms.index,
+    link: pages.policies.terms.index,
     color: "from-purple-500 to-purple-600",
     bgColor: "bg-purple-50 dark:bg-purple-900/30",
     textColor: "text-purple-700 dark:text-purple-300",
@@ -46,7 +46,7 @@ const policyDocuments = [
     description:
       "Ensure compliance with cookie regulations worldwide with a detailed policy explaining how cookies are used on your website.",
     icon: Globe,
-    link: pages.cookies.index,
+    link: pages.policies.cookies.index,
     color: "from-emerald-500 to-emerald-600",
     bgColor: "bg-emerald-50 dark:bg-emerald-900/30",
     textColor: "text-emerald-700 dark:text-emerald-300",

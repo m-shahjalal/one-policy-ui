@@ -27,7 +27,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { pages } from "@/config/pages";
+import { pages } from "@/config/routes";
 
 // Define schema for form validation
 const loginSchema = z.object({
@@ -56,7 +56,7 @@ export default function LoginForm() {
     },
   });
 
-  async function onSubmit(data: LoginFormValues) {
+  async function onSubmit() {
     setIsLoading(true);
     setError(null);
 
@@ -64,7 +64,7 @@ export default function LoginForm() {
       // Here you would normally make an API call to authenticate
       // For now we're using a mock response
       // Replace this with your actual authentication API call
-      const response = await mockLoginApi(data);
+      const response = await mockLoginApi();
 
       if (response.success) {
         // Redirect to dashboard on successful login
@@ -83,7 +83,7 @@ export default function LoginForm() {
   }
 
   // Mock function to simulate API call - replace with actual API call
-  async function mockLoginApi(data: LoginFormValues) {
+  async function mockLoginApi() {
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
 

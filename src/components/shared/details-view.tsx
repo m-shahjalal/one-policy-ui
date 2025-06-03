@@ -1,62 +1,90 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import {
-  Shield,
-  Copy,
-  Download,
-  FileText,
-  Clock,
-  ChevronRight,
-  Check,
-  LinkIcon,
-  Mail,
-  ExternalLink,
-  AlertCircle,
-  FilePlus,
-} from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { toast } from "sonner";
-import { themeConfig, PolicyType } from "@/config/theme";
+import { pages } from "@/config/routes";
+import { PolicyType, themeConfig } from "@/config/theme";
+import { downloadContent, DownloadType } from "@/lib/downloader";
+import { format } from "date-fns";
+import { motion } from "framer-motion";
+import {
+  AlertCircle,
+  Check,
+  ChevronRight,
+  Clock,
+  Copy,
+  Download,
+  ExternalLink,
+  FilePlus,
+  FileText,
+  Mail,
+  Shield,
+  Sparkles,
+} from "lucide-react";
 import { useTheme } from "next-themes";
-import { pages } from "@/config/pages";
+import Link from "next/link";
+import { JSX, useState } from "react";
+import { toast } from "sonner";
 
 interface DetailsViewProps {
   type: PolicyType;
   title: string;
+  slug: string;
   description: string;
   lastUpdated: string;
   effectiveDate: string;
   policyText: string;
+  policyComponent: JSX.Element;
 }
 
 export function DetailsViewPage({
+  slug,
   type,
   title,
   description,
   lastUpdated,
   effectiveDate,
   policyText,
+  policyComponent,
 }: DetailsViewProps) {
-  const [copied, setCopied] = useState(false);
+  const [docCopied, setDocCopied] = useState(false);
+  const [urlCopied, setUrlCopied] = useState(false);
   const { theme } = useTheme();
   const currentTheme = theme === "dark" ? "dark" : "light";
   const themeColors = themeConfig[type][currentTheme].primary;
 
-  const copyToClipboard = () => {
+  const readableLastUpdated = format(lastUpdated, "d MMM, yyyy");
+  const readableEffective = format(effectiveDate, "d MMM, yyyy");
+  const shareUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/share/${slug}`;
+
+  const copyAsDoc = () => {
+    setDocCopied(true);
     navigator.clipboard.writeText(policyText);
-    setCopied(true);
-    toast.success("Copied to clipboard");
-    setTimeout(() => setCopied(false), 2000);
+    toast.success("Markdown copied to clipboard");
+    setTimeout(() => setDocCopied(false), 2000);
   };
 
-  const downloadPolicy = (format: string) => {
-    toast(`Downloading ${format} file`);
-    // In a real implementation, this would trigger an actual download
+  const copyUrl = () => {
+    setUrlCopied(true);
+    navigator.clipboard.writeText(shareUrl);
+    toast.success("Shareable URL copied to clipboard");
+    setTimeout(() => setUrlCopied(false), 2000);
+  };
+
+  const downloadPolicy = async (format: DownloadType) => {
+    toast.info(`Downloading ${format} file`);
+
+    if (format === "HTML" || format === "PDF") {
+      const content = document.getElementById("printArea");
+      if (!content) return toast.error("Somthing wrong happen");
+      downloadContent(format, content);
+    }
+
+    if (format === "MD" || format === "TXT") {
+      downloadContent(format, policyText);
+    }
   };
 
   const getRelatedDocuments = () => {
@@ -66,9 +94,9 @@ export function DetailsViewPage({
         description:
           "Protect your users' data with a comprehensive privacy policy.",
         icon: FileText,
-        href: pages.policies.privacy.index,
+        href: pages.policies.privacies.index,
         color: "blue",
-        type: "privacy",
+        type: "privacies",
       },
       {
         title: "Cookie Policy",
@@ -76,17 +104,17 @@ export function DetailsViewPage({
         icon: FilePlus,
         href: pages.policies.cookies.index,
         color: "emerald",
-        type: "cookie",
+        type: "cookies",
       },
       {
         title: "Terms & Conditions",
         description: "Set clear rules and guidelines for using your service.",
         icon: FileText,
-        href: pages.policies.term.index,
+        href: pages.policies.terms.index,
         color: "purple",
         type: "terms",
       },
-    ];
+    ] as const;
 
     // Filter out the current document
     return documents.filter((doc) => type !== doc.type);
@@ -104,7 +132,7 @@ export function DetailsViewPage({
           variant="outline"
           className={`mb-3 sm:mb-4 px-3 py-1 text-sm ${themeColors.badge.bg} ${themeColors.badge.text} ${themeColors.badge.border}`}
         >
-          Last updated: {lastUpdated}
+          Last updated: {readableLastUpdated}
         </Badge>
         <h1
           className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 bg-gradient-to-r ${themeColors.from} ${themeColors.to} bg-clip-text text-transparent`}
@@ -134,7 +162,7 @@ export function DetailsViewPage({
             </div>
 
             <div className="p-4 sm:p-5">
-              <Tabs defaultValue="view" className="w-full">
+              <Tabs defaultValue="copy" className="w-full">
                 <TabsList className="grid grid-cols-3 mb-4">
                   <TabsTrigger value="view">View</TabsTrigger>
                   <TabsTrigger value="copy">Copy</TabsTrigger>
@@ -166,22 +194,13 @@ export function DetailsViewPage({
                     </ul>
                   </div>
 
-                  <Alert className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Important</AlertTitle>
-                    <AlertDescription>
-                      This {type} policy should be reviewed by a legal
-                      professional before use.
-                    </AlertDescription>
-                  </Alert>
-
                   <div
                     className={`flex items-center justify-between p-3 ${themeColors.bg} rounded-lg text-sm`}
                   >
                     <div className="flex items-center gap-2">
                       <Clock className={`h-4 w-4 ${themeColors.icon}`} />
                       <span className="text-gray-700 dark:text-gray-300">
-                        Effective: {effectiveDate}
+                        Effective: {readableEffective}
                       </span>
                     </div>
                     <Badge
@@ -196,19 +215,19 @@ export function DetailsViewPage({
                 <TabsContent value="copy" className="space-y-4">
                   <div className="text-sm text-gray-600 dark:text-gray-300">
                     <p>
-                      Copy your {type} policy as HTML or plain text to use on
-                      your website.
+                      Copy your {type} policy as Markdown text to use on your
+                      website.
                     </p>
                   </div>
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      onClick={copyToClipboard}
+                      onClick={copyAsDoc}
                       className="w-full flex items-center justify-center gap-2"
-                      variant={copied ? "outline" : "default"}
+                      variant={docCopied ? "outline" : "default"}
                       size="sm"
                     >
-                      {copied ? (
+                      {docCopied ? (
                         <>
                           <Check className="h-4 w-4" />
                           <span>Copied!</span>
@@ -216,13 +235,39 @@ export function DetailsViewPage({
                       ) : (
                         <>
                           <Copy className="h-4 w-4" />
-                          <span>Copy to Clipboard</span>
+                          <span>Copy the Markdown</span>
                         </>
                       )}
                     </Button>
+                    <div className="pt-4 border-t border-gray-100 dark:border-gray-700 mt-4">
+                      <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
+                        Copy the link to your {type} policy page. We host it for
+                        free.
+                      </p>
 
-                    <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                      You can also copy specific sections from the policy text
+                      <div className="flex flex-col items-stretch gap-2">
+                        <div className="flex-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-lg px-3 py-2 text-gray-700 dark:text-gray-300 text-sm overflow-hidden overflow-ellipsis whitespace-nowrap">
+                          {shareUrl}
+                        </div>
+                        <Button
+                          onClick={copyUrl}
+                          size="sm"
+                          variant="gradient"
+                          className={`sm:rounded-lg mt-2 bg-gradient-to-r ${themeColors.from} ${themeColors.to} text-white`}
+                        >
+                          {urlCopied ? (
+                            <>
+                              <Check className="h-4 w-4" />
+                              <span>Copied!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="h-4 w-4 mr-2" />
+                              <span>Copy URL</span>
+                            </>
+                          )}
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </TabsContent>
@@ -247,14 +292,14 @@ export function DetailsViewPage({
                     </Button>
 
                     <Button
-                      onClick={() => downloadPolicy("DOCX")}
+                      onClick={() => downloadPolicy("MD")}
                       variant="outline"
                       size="sm"
                       className="w-full flex items-center justify-between"
                     >
                       <div className="flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-blue-500" />
-                        <span>Word (DOCX)</span>
+                        <FileText className="h-4 w-4 text-stone-800" />
+                        <span>Markdown (.md)</span>
                       </div>
                       <Download className="h-4 w-4" />
                     </Button>
@@ -267,7 +312,7 @@ export function DetailsViewPage({
                     >
                       <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 text-gray-500" />
-                        <span>Plain Text (TXT)</span>
+                        <span>Plain Text</span>
                       </div>
                       <Download className="h-4 w-4" />
                     </Button>
@@ -289,7 +334,7 @@ export function DetailsViewPage({
               </Tabs>
             </div>
 
-            <div className="p-4 sm:p-5 border-t border-gray-100 dark:border-gray-700">
+            <div className="p-4 sm:p-5 border-t">
               <h3 className="font-medium mb-3 text-gray-900 dark:text-white">
                 Need Help?
               </h3>
@@ -297,19 +342,31 @@ export function DetailsViewPage({
                 If you have any questions about this {type} policy, please
                 contact our support team.
               </p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full flex items-center justify-center gap-2"
-              >
-                <Mail className="h-4 w-4" />
-                <span>Contact Support</span>
-              </Button>
+              <Link href={pages.contact}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full flex items-center justify-center gap-2"
+                >
+                  <Mail className="h-4 w-4" />
+                  <span>Contact Support</span>
+                </Button>
+              </Link>
+
+              <Alert className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 mt-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Important</AlertTitle>
+                <AlertDescription>
+                  This {type} policy should be reviewed by a legal professional
+                  before use.
+                </AlertDescription>
+              </Alert>
             </div>
           </div>
         </motion.div>
 
         <motion.div
+          id="printArea"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
@@ -325,163 +382,30 @@ export function DetailsViewPage({
               </h2>
 
               <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                  onClick={copyToClipboard}
-                  size="sm"
-                >
-                  <Copy className="h-5 w-5 mr-2" />
-                  <span className="text-sm">Copy</span>
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <Download className="h-5 w-5 mr-2" />
-                  <span className="text-sm">Download</span>
-                </Button>
-              </div>
-            </div>
-
-            <div className="p-4 sm:p-6 md:p-8">
-              <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-green-500"></div>
                   <span className="text-sm text-gray-500 dark:text-gray-400">
                     Active document
                   </span>
                 </div>
+              </div>
+            </div>
+
+            <div className="p-4 sm:p-6 md:p-8 pb-0">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                  <Sparkles className="h-4 w-4" />
+                  <span>Effective from: {readableEffective}</span>
+                </div>
                 <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                   <Clock className="h-4 w-4" />
-                  <span>Last updated: {lastUpdated}</span>
+                  <span>Last updated: {readableLastUpdated}</span>
                 </div>
               </div>
 
               <div className="prose dark:prose-invert max-w-none">
                 <div className="whitespace-pre-wrap text-sm sm:text-base">
-                  {policyText}
-                </div>
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-700">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      Effective: {effectiveDate}
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-gray-700 dark:text-gray-200"
-                      onClick={copyToClipboard}
-                    >
-                      <Copy className="h-4 w-4 mr-2" />
-                      <span>Copy Full Document</span>
-                    </Button>
-
-                    <Button
-                      size="sm"
-                      variant="gradient"
-                      className={`bg-gradient-to-r ${themeColors.from} ${themeColors.to} text-white`}
-                    >
-                      <Download className="h-4 w-4 mr-2" />
-                      <span>Download</span>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 sm:mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-gray-900/10 border border-gray-100 dark:border-gray-700 overflow-hidden">
-            <div
-              className={`p-4 sm:p-5 bg-gradient-to-r ${themeColors.bg} border-b border-gray-100 dark:border-gray-700`}
-            >
-              <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2">
-                <LinkIcon className={`h-5 w-5 ${themeColors.icon}`} />
-                <span>Link to Your {title}</span>
-              </h2>
-            </div>
-
-            <div className="p-4 sm:p-6">
-              <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 mb-4">
-                Copy the link to your {type} policy page. We host it for free.
-              </p>
-
-              <div className="flex flex-col sm:flex-row items-stretch gap-2 mb-4">
-                <div className="flex-1 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-l-lg sm:rounded-r-none px-3 py-2 text-gray-700 dark:text-gray-300 text-sm overflow-hidden overflow-ellipsis whitespace-nowrap">
-                  https://policymint.com/{type}-policy/t8f7s9d8f7s9d8f7s9d8f7
-                </div>
-                <Button
-                  onClick={() => {
-                    navigator.clipboard.writeText(
-                      `https://policymint.com/${type}-policy/t8f7s9d8f7s9d8f7s9d8f7`
-                    );
-                    toast("Link copied");
-                  }}
-                  size="sm"
-                  variant="gradient"
-                  className={`sm:rounded-l-none sm:rounded-r-lg bg-gradient-to-r ${themeColors.from} ${themeColors.to} text-white`}
-                >
-                  <Copy className="h-4 w-4 mr-2" />
-                  <span>Copy</span>
-                </Button>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm">
-                <div className="bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800 rounded-lg p-3 flex items-start gap-2">
-                  <Check className="h-4 w-4 text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
-                  <div>
-                    <p className="font-medium text-green-800 dark:text-green-300">
-                      Free revisions
-                    </p>
-                    <p className="text-green-700 dark:text-green-400">
-                      Free page updates and revisions.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800 rounded-lg p-3 flex items-start gap-2">
-                  <Check className="h-4 w-4 text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
-                  <div>
-                    <p className="font-medium text-green-800 dark:text-green-300">
-                      Free hosting
-                    </p>
-                    <p className="text-green-700 dark:text-green-400">
-                      Free page hosting by us.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800 rounded-lg p-3 flex items-start gap-2">
-                  <Check className="h-4 w-4 text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
-                  <div>
-                    <p className="font-medium text-green-800 dark:text-green-300">
-                      Good SEO
-                    </p>
-                    <p className="text-green-700 dark:text-green-400">
-                      Page is not indexable by Google.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800 rounded-lg p-3 flex items-start gap-2">
-                  <Check className="h-4 w-4 text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
-                  <div>
-                    <p className="font-medium text-green-800 dark:text-green-300">
-                      Discounted upgrades
-                    </p>
-                    <p className="text-green-700 dark:text-green-400">
-                      Discounts on major upgrades.
-                    </p>
-                  </div>
+                  {policyComponent}
                 </div>
               </div>
             </div>
@@ -545,19 +469,6 @@ export function DetailsViewPage({
           </div>
         </div>
       </motion.div>
-
-      <div className="mt-8 sm:mt-12 text-center text-sm text-gray-500 dark:text-gray-400">
-        <p>
-          Disclaimer: Legal information is not legal advice. Read the{" "}
-          <a
-            href={pages.indoorPolicy.ourTerms}
-            className={`text-${themeColors.text} hover:underline`}
-          >
-            disclaimer
-          </a>
-          .
-        </p>
-      </div>
     </div>
   );
 }

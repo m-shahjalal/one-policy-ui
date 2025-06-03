@@ -26,7 +26,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { pages } from "@/config/pages";
+import { pages } from "@/config/routes";
 
 const resetPasswordSchema = z
   .object({
@@ -53,7 +53,7 @@ interface ResetPasswordFormProps {
   token: string;
 }
 
-export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
+export default function ResetPasswordForm({}: ResetPasswordFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

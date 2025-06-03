@@ -1,5 +1,5 @@
 export const themeConfig = {
-  cookie: {
+  cookies: {
     light: {
       primary: {
         from: "from-emerald-600",
@@ -31,7 +31,7 @@ export const themeConfig = {
       },
     },
   },
-  privacy: {
+  privacies: {
     light: {
       primary: {
         from: "from-blue-600",

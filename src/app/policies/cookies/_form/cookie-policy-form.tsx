@@ -7,7 +7,7 @@ import {
 } from "@/components/shared/step-form-overview";
 import { Form, FormRef, Stepper } from "formify";
 import { CookieIcon, GlobeIcon, MailIcon, ShieldIcon } from "lucide-react";
-import { createElement, useRef } from "react";
+import { createElement, useEffect, useRef } from "react";
 import useSWRMutation from "swr/mutation";
 import { Step1Form, Step2Form, Step3Form, Step4Form } from ".";
 import {
@@ -16,11 +16,10 @@ import {
   cookieFormSchema,
 } from "./schema";
 import { createOrUpdatePolicy as creator } from "@/lib/mutate-form";
-import { FullpageLoader } from "@/components/shared/full-ui-loader";
+import { FormFeatureLoader } from "@/components/shared/form-loader";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { pages } from "@/config/pages";
-import { API } from "@/config/apis";
+import { apis, pages } from "@/config/routes";
 
 const steps: StepConfig[] = [
   {
@@ -71,29 +70,30 @@ const steps: StepConfig[] = [
 
 export function CookiePolicyForm({ initial }: { initial?: CookieForm }) {
   const router = useRouter();
-  const { data, isMutating, trigger, error } = useSWRMutation(
-    API.cookies.create,
-    creator
-  );
+  const swr = useSWRMutation(apis.cookies.create, creator);
   const formRef = useRef<FormRef<CookieForm>>(null);
   const triggerForm = useTriggerForm<CookieForm>();
+  const { data, isMutating, trigger, error } = swr;
 
-  const clickSubmit = () => {
+  const clickSubmit = async () => {
     trigger({ formData: formRef.current?.form.watch() });
+  };
 
+  useEffect(() => {
     if (error) {
       toast.error("Something went wrong, please try again later");
-      return;
     }
 
-    toast.success("Cookie policy generated successfully.");
-    router.push(pages.policies.cookies.view(data?.data.data.ID));
-  };
+    if (data) {
+      toast.success("Cookie policy generated successfully.");
+      router.push(pages.policies.cookies.view(data.id));
+    }
+  }, [data, error, router]);
 
   return (
     <div className="space-y-8">
       {isMutating ? (
-        <FullpageLoader />
+        <FormFeatureLoader />
       ) : (
         <Form
           ref={formRef}

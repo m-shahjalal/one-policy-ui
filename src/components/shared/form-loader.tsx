@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 
-export function FullpageLoader() {
+export function FormFeatureLoader() {
   return (
     <AnimatePresence>
       <motion.div

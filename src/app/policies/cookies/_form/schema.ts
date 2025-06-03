@@ -283,7 +283,7 @@ export const cookieFormDefaultValues: CookieForm = {
   stepThree: {
     compliance: {
       gdpr: false,
-      ccpa: false,
+      ccpa: true,
       other: false,
       otherCompliance: undefined,
     },
@@ -297,6 +297,6 @@ export const cookieFormDefaultValues: CookieForm = {
   },
   stepFour: {
     preferredContactMethod: "email",
-    email: undefined,
+    email: "text@mail.com",
   },
 };

@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { pages } from "@/config/pages";
+import { pages } from "@/config/routes";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -25,10 +25,9 @@ export default function Footer() {
   ];
 
   const legalLinks = [
-    { label: "Privacy Policy", href: pages.indoorPolicy.ourPolicy },
-    { label: "Terms of Service", href: pages.indoorPolicy.ourTerms },
+    { label: "Privacy Policy", href: pages.indoorPolicy.ourPrivacy },
+    { label: "Terms of Service", href: pages.indoorPolicy.ourTerm },
     { label: "Cookie Policy", href: pages.indoorPolicy.ourCookie },
-    { label: "GDPR Compliance", href: pages.indoorPolicy.ourGDPR },
   ];
 
   const resourceLinks = [

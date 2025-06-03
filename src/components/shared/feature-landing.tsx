@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { pages } from "@/config/pages";
+import { pages } from "@/config/routes";
 import { motion } from "framer-motion";
 import { type LucideIcon, ArrowRight, ChevronRight, Star } from "lucide-react";
 import Link from "next/link";
@@ -281,7 +281,7 @@ export default function FeatureLandingPage({
               ].map((company, index) => (
                 <div
                   key={index}
-                  className="text-gray-400 dark:text-gray-500 font-semibold text-lg"
+                  className="text-gray-400 dark:text-gray-500 text-lg"
                 >
                   {company}
                 </div>

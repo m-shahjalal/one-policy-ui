@@ -1,6 +1,6 @@
 "use client";
 
-import { pages } from "@/config/pages";
+import { pages } from "@/config/routes";
 import { motion } from "framer-motion";
 import { Lock, Zap, FileText, Package, ArrowRight } from "lucide-react";
 import Link from "next/link";

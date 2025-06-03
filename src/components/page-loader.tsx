@@ -238,7 +238,7 @@ const ThemeableFullPageLoader = ({
 };
 
 // Demo component to show all themed loaders
-const LoaderDemo = () => {
+const FullPageLoader = () => {
   // Using a static theme since theme selector is hidden
   const selectedTheme: keyof typeof colorMapping = "cosmic";
 
@@ -249,4 +249,4 @@ const LoaderDemo = () => {
   );
 };
 
-export default LoaderDemo;
+export default FullPageLoader;

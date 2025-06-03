@@ -27,7 +27,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { pages } from "@/config/pages";
+import { pages } from "@/config/routes";
 
 const signupSchema = z
   .object({

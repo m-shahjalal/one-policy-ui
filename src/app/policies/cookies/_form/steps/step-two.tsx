@@ -1,13 +1,13 @@
 "use client";
 
-import { CheckboxField, SelectField } from "formify";
 import { FieldArray } from "@/components/formify/components/field-array";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { CheckboxField, SelectField } from "formify";
+import { Plus, Trash2 } from "lucide-react";
 import { ArrayPath, useFormContext } from "react-hook-form";
 import type { CookieForm } from "../schema";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Plus, Trash2 } from "lucide-react";
 
 export function Step2Form({
   title,
@@ -16,8 +16,7 @@ export function Step2Form({
   title: string;
   description: string;
 }) {
-  const { watch, formState, getValues, register } =
-    useFormContext<CookieForm>();
+  const { watch, register } = useFormContext<CookieForm>();
 
   // Watch for persistent cookie selection and third party selection
   const persistent = watch("stepTwo.cookieDuration.persistent");

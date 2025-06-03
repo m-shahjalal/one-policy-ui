@@ -3,12 +3,15 @@
 import CookieConsent from "@/components/blocks/cookie-consent";
 import Footer from "@/components/footer";
 import Navbar from "@/components/header";
+import { pages } from "@/config/routes";
+import fetch from "@/lib/fetcher";
 import { ThemeProvider } from "next-themes";
+import { usePathname } from "next/navigation";
+import NextTopLoader from "nextjs-toploader";
 import { useEffect, useState } from "react";
 import { SWRConfig } from "swr";
 import FullPageLoader from "./page-loader";
-import fetch from "@/lib/fetcher";
-import { pages } from "@/config/pages";
+import { Toaster } from "./ui/sonner";
 
 function ProviderInner({ children }: { children: React.ReactNode }) {
   const [cookieConsent, setCookieConsent] = useState<boolean | null>(null);
@@ -34,6 +37,8 @@ function ProviderInner({ children }: { children: React.ReactNode }) {
     setCookieConsent(false);
   };
 
+  const theme = localStorage.getItem("theme") as "light" | "dark" | "system";
+
   return (
     <SWRConfig
       value={{
@@ -41,6 +46,7 @@ function ProviderInner({ children }: { children: React.ReactNode }) {
         fetcher: (r) => fetch.get(r).then((r) => r.data),
       }}
     >
+      <NextTopLoader color="oklch(71.4% 0.203 305.504)" />
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <Navbar />
         {children}
@@ -53,12 +59,14 @@ function ProviderInner({ children }: { children: React.ReactNode }) {
           />
         )}
       </ThemeProvider>
+      <Toaster richColors position="top-center" theme={theme} />
     </SWRConfig>
   );
 }
 
 const Provider = ({ children }: { children: React.ReactNode }) => {
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
@@ -70,6 +78,10 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
         <FullPageLoader />
       </div>
     );
+  }
+
+  if (pathname.includes("/share/")) {
+    return children;
   }
 
   return <ProviderInner>{children}</ProviderInner>;

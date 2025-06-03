@@ -1,9 +1,8 @@
 // lib/axios.ts
 import axios from "axios";
-import Cookies from "js-cookie";
 
 const fetcher = axios.create({
-  baseURL: process.env.API_URL || "http://localhost:4000",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000",
   headers: {
     "Content-Type": "application/json",
   },
@@ -13,7 +12,7 @@ const fetcher = axios.create({
 // Request interceptor for auth token from cookies
 fetcher.interceptors.request.use(
   (config) => {
-    const token = Cookies.get("token"); // Get token from cookie
+    const token = "token"; // Get token from cookie
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -30,7 +29,6 @@ fetcher.interceptors.response.use(
 
     if (status === 401) {
       if (typeof window !== "undefined") {
-        Cookies.remove("token");
         window.location.href = "/login";
       }
     } else if (status === 403) {

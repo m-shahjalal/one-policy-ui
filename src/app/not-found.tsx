@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { FileQuestion, Home, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { pages } from "@/config/pages";
+import { pages } from "@/config/routes";
 
 export default function NotFound() {
   // Animation variants
@@ -25,8 +25,8 @@ export default function NotFound() {
 
   // Suggested pages
   const suggestedPages = [
-    { name: "Privacy Policy", href: pages.policies.privacy.index },
-    { name: "Terms & Conditions", href: pages.policies.term.index },
+    { name: "Privacy Policy", href: pages.policies.privacies.index },
+    { name: "Terms & Conditions", href: pages.policies.terms.index },
     { name: "Cookie Policy", href: pages.policies.cookies.index },
     { name: "Home", href: "/" },
   ];

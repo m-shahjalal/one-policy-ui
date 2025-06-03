@@ -1,7 +1,7 @@
 "use client";
 
 import FeatureLandingPage from "@/components/shared/feature-landing";
-import { pages } from "@/config/pages";
+import { pages } from "@/config/routes";
 import {
   Cookie,
   Globe,

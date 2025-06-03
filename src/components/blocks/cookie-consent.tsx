@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Cookie, X, ChevronRight, Shield } from "lucide-react";
 import Link from "next/link";
-import { pages } from "@/config/pages";
+import { pages } from "@/config/routes";
 
 interface CookieConsentProps {
   onAccept: () => void;
