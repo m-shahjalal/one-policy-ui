@@ -1,6 +1,7 @@
 import MDXContent from "@/components/blocks/mdx-content";
 import { DetailsViewPage } from "@/components/shared/details-view";
 import { apis } from "@/config/routes";
+import { serialize } from "next-mdx-remote/serialize";
 
 interface CookiePolicyData {
   id: string;
@@ -19,6 +20,11 @@ export default async function CookiePolicyPage({
   const response = await fetch(url);
   const { data }: { data: CookiePolicyData } = await response.json();
 
+  const cleanContent = data.Markdown.replace(/^```markdown\n/, "")
+    .replace(/\n```$/, "")
+    .replace(/\\"/g, '"')
+    .replace(/\\n/g, "\n");
+
   return (
     <DetailsViewPage
       slug={data.id}
@@ -27,7 +33,7 @@ export default async function CookiePolicyPage({
       description="This Cookie Policy explains how OnePolicy uses cookies and similar technologies to enhance your browsing experience."
       lastUpdated={data.updated_at}
       effectiveDate={data.Effect_date}
-      policyComponent={<MDXContent source={data.Markdown} />}
+      policyComponent={<MDXContent source={cleanContent} />}
       policyText={data.Markdown}
     />
   );
