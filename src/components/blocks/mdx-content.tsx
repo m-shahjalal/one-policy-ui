@@ -1,19 +1,16 @@
-import { MDXRemote } from "next-mdx-remote/rsc";
-import type { MDXRemoteProps } from "next-mdx-remote/rsc";
-import React, { type ComponentProps, type ReactNode } from "react";
+import { MDXOptions } from "@/lib/mdx";
 import { cn } from "@/lib/utils";
 import {
   AlertCircle,
   AlertTriangle,
   CheckCircle,
-  Info,
-  Copy,
   ExternalLink,
+  Info,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { MDXOptions } from "@/lib/mdx";
+import type { MDXRemoteProps } from "next-mdx-remote/rsc";
+import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
+import { type ComponentProps, type ReactNode } from "react";
 import { CodeBlock } from "../ui/code-block-mdx";
 
 const CalloutBox = ({

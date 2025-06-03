@@ -1,7 +1,6 @@
 import MDXContent from "@/components/blocks/mdx-content";
 import { DetailsViewPage } from "@/components/shared/details-view";
 import { apis } from "@/config/routes";
-import { serialize } from "next-mdx-remote/serialize";
 
 interface CookiePolicyData {
   id: string;
