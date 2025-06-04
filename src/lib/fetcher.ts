@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 const url = (path: string) => {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
   return new URL(path, baseUrl).toString();
@@ -14,25 +16,30 @@ const headers = (otherHeaders?: HeadersInit) => {
 const handleError = async <T>(response: Response) => {
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(
-      `HTTP error! status: ${response.status}, message: ${errorText}`
-    );
+    const msg = `HTTP error! status: ${response.status}, message: ${errorText}`;
+    toast.error(msg);
+    console.error(msg);
+    throw new Error(msg);
   }
 
   const contentType = response.headers.get("content-type");
   if (!contentType || !contentType.includes("application/json")) {
     const responseText = await response.text();
-    throw new Error(
-      `Expected JSON response but got: ${contentType}. Response: ${responseText.substring(
-        0,
-        200
-      )}...`
-    );
+    const msg = `Expected JSON response but got: ${contentType}. Response: ${responseText.substring(
+      0,
+      200
+    )}...`;
+    toast.error(msg);
+    console.error(msg);
+    throw new Error(msg);
   }
 
   const result = await response.json();
   if (!result || !result.data) {
-    throw new Error("Invalid response format: 'data' field is missing.");
+    const msg = `Invalid response format: expected an object with a 'data' field`;
+    toast.error(msg);
+    console.error(msg);
+    throw new Error(msg);
   }
 
   return result.data as T;

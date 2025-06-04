@@ -1,25 +1,24 @@
 "use client";
 
 import { useTriggerForm } from "@/components/formify/hooks/useTrigger";
+import { FormFeatureLoader } from "@/components/shared/form-loader";
 import {
   OverviewForm,
   StepConfig,
 } from "@/components/shared/step-form-overview";
+import { apis, pages } from "@/config/routes";
+import fetcher from "@/lib/fetcher";
 import { Form, FormRef, Stepper } from "formify";
 import { CookieIcon, GlobeIcon, MailIcon, ShieldIcon } from "lucide-react";
-import { createElement, useEffect, useRef } from "react";
-import useSWRMutation from "swr/mutation";
+import { useRouter } from "next/navigation";
+import { createElement, useRef, useState } from "react";
+import { toast } from "sonner";
 import { Step1Form, Step2Form, Step3Form, Step4Form } from ".";
 import {
   CookieForm,
   cookieFormDefaultValues,
   cookieFormSchema,
 } from "./schema";
-import { createOrUpdatePolicy as creator } from "@/lib/mutate-form";
-import { FormFeatureLoader } from "@/components/shared/form-loader";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { apis, pages } from "@/config/routes";
 
 const steps: StepConfig[] = [
   {
@@ -70,31 +69,28 @@ const steps: StepConfig[] = [
 
 export function CookiePolicyForm({ initial }: { initial?: CookieForm }) {
   const router = useRouter();
-  const swr = useSWRMutation(apis.cookies.create, creator);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const formRef = useRef<FormRef<CookieForm>>(null);
   const triggerForm = useTriggerForm<CookieForm>();
-  const { data, isMutating, trigger, error } = swr;
-
-  console.log("data", data, isMutating, trigger, error);
 
   const clickSubmit = async () => {
-    trigger({ formData: formRef.current?.form.watch() });
-  };
+    setIsSubmitting(true);
 
-  useEffect(() => {
-    if (error) {
-      toast.error("Something went wrong, please try again later");
-    }
+    const data = await fetcher.post<{ id: string }>(
+      apis.cookies.create,
+      formRef.current?.form.getValues()
+    );
 
-    if (data) {
+    if (data.id) {
       toast.success("Cookie policy generated successfully.");
-      router.push(pages.policies.cookies.view(data.id));
+      router.replace(pages.policies.cookies.view(data.id));
     }
-  }, [data, error, router]);
+  };
 
   return (
     <div className="space-y-8">
-      {isMutating ? (
+      {isSubmitting ? (
         <FormFeatureLoader />
       ) : (
         <Form
