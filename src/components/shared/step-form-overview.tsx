@@ -119,7 +119,7 @@ export function OverviewForm({ title, description, steps }: OverviewProps) {
               className={`${level > 0 ? "ml-4 mt-3" : "mt-4"}`}
             >
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-2 h-2 rounded-full bg-primary/60"></div>
+                <div className="w-2 h-2 rounded-full bg-primary/60" />
                 <h4 className="font-semibold text-sm text-foreground">
                   {formatLabel(key)}
                 </h4>

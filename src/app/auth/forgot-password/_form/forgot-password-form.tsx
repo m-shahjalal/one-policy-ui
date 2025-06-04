@@ -4,19 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { ArrowLeft, Loader2, CheckCircle2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import {
   Card,
   CardContent,
@@ -26,12 +17,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { pages } from "@/config/routes";
-
-const forgotPasswordSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-});
-
-type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
+import {
+  ForgotPasswordFormFields,
+  forgotPasswordSchema,
+  defaultValues,
+  type ForgotPasswordFormValues,
+} from ".";
 
 export default function ForgotPasswordForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -41,9 +32,7 @@ export default function ForgotPasswordForm() {
 
   const form = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(forgotPasswordSchema),
-    defaultValues: {
-      email: "",
-    },
+    defaultValues,
   });
 
   async function onSubmit(data: ForgotPasswordFormValues) {
@@ -91,24 +80,7 @@ export default function ForgotPasswordForm() {
                 </div>
               )}
 
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="name@example.com"
-                        type="email"
-                        autoComplete="email"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <ForgotPasswordFormFields />
 
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (

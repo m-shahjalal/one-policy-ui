@@ -15,6 +15,8 @@ import fetcher from "@/lib/fetcher";
 
 function ProviderInner({ children }: { children: React.ReactNode }) {
   const [cookieConsent, setCookieConsent] = useState<boolean | null>(null);
+  const theme = localStorage.getItem("theme") as "light" | "dark" | "system";
+  const pathname = usePathname();
 
   useEffect(() => {
     const savedConsent = localStorage.getItem("cookie-consent");
@@ -37,7 +39,9 @@ function ProviderInner({ children }: { children: React.ReactNode }) {
     setCookieConsent(false);
   };
 
-  const theme = localStorage.getItem("theme") as "light" | "dark" | "system";
+  if (pathname.includes("/share/")) {
+    return children;
+  }
 
   return (
     <SWRConfig
@@ -49,9 +53,9 @@ function ProviderInner({ children }: { children: React.ReactNode }) {
     >
       <NextTopLoader color="oklch(71.4% 0.203 305.504)" />
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <Navbar />
+        {!pathname.includes("/auth") && <Navbar />}
         {children}
-        <Footer />
+        {!pathname.includes("/auth") && <Footer />}
         {cookieConsent === null && (
           <CookieConsent
             onAccept={handleAcceptCookies}
@@ -67,7 +71,6 @@ function ProviderInner({ children }: { children: React.ReactNode }) {
 
 const Provider = ({ children }: { children: React.ReactNode }) => {
   const [mounted, setMounted] = useState(false);
-  const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
@@ -79,10 +82,6 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
         <FullPageLoader />
       </div>
     );
-  }
-
-  if (pathname.includes("/share/")) {
-    return children;
   }
 
   return <ProviderInner>{children}</ProviderInner>;

@@ -162,15 +162,12 @@ function ScreenLoader() {
 
       {/* Background glow effects */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Top right glow */}
         <div
           className="absolute top-1/4 right-1/4 w-64 h-64 rounded-full blur-3xl opacity-30"
           style={{
             background: `radial-gradient(circle, ${gradientColors.primary} 0%, transparent 70%)`,
           }}
         />
-
-        {/* Bottom left glow */}
         <div
           className="absolute bottom-1/4 left-1/4 w-64 h-64 rounded-full blur-3xl opacity-30"
           style={{

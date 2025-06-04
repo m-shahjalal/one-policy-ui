@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import Link from "next/link";
 import { AlertTriangle, ArrowLeft, RotateCw } from "lucide-react";
+import { pages } from "@/config/routes";
 
 export default function CookiePolicyError({
   error,
@@ -93,7 +94,7 @@ export default function CookiePolicyError({
                 <p className="text-sm text-muted-foreground">
                   Need help?{" "}
                   <Link
-                    href="/contact"
+                    href={pages.contact}
                     className="font-medium text-primary hover:text-primary/80"
                   >
                     Contact our support team
