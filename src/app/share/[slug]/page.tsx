@@ -1,6 +1,7 @@
-import NotFound from "@/app/not-found";
 import MDXContent from "@/components/blocks/mdx-content";
 import { apis } from "@/config/routes";
+import fetcher from "@/lib/fetcher";
+import { cleanMDXContent } from "@/lib/mdx";
 import { format } from "date-fns";
 import { Clock, FileText, Sparkles } from "lucide-react";
 
@@ -19,17 +20,10 @@ export default async function SharePage({
 }) {
   const { slug } = await params;
   const url = `${process.env.NEXT_PUBLIC_API_URL}${apis.cookies.view(slug)}`;
-  const response = await fetch(url);
-  const { data }: { data: CookiePolicyData } = await response.json();
-  if (!data?.id) return <NotFound />;
+  const data = await fetcher.get<CookiePolicyData>(url);
 
-  const readableLastUpdated = format(data?.updated_at, "d MMM, yyyy");
-  const readableEffective = format(data?.Effect_date, "d MMM, yyyy");
-
-  const cleanContent = data.Markdown.replace(/^```markdown\n/, "")
-    .replace(/\n```$/, "")
-    .replace(/\\"/g, '"')
-    .replace(/\\n/g, "\n");
+  const readableLastUpdated = format(data?.updated_at ?? "", "d MMM, yyyy");
+  const readableEffective = format(data?.Effect_date ?? "", "d MMM, yyyy");
 
   return (
     <div className="lg:col-span-2 order-1 lg:order-2 max-w-7xl mx-auto px-4">
@@ -39,12 +33,12 @@ export default async function SharePage({
         >
           <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2">
             <FileText className={`h-5 w-5`} />
-            <span>{data.Policy_type} Content</span>
+            <span>{data?.Policy_type} Content</span>
           </h2>
 
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-green-500"></div>
+              <div className="h-2 w-2 rounded-full bg-green-500" />
               <span className="text-sm text-gray-500">Active document</span>
             </div>
           </div>
@@ -64,7 +58,7 @@ export default async function SharePage({
 
           <div className="prose dark:prose-invert max-w-none">
             <div className="whitespace-pre-wrap text-sm sm:text-base">
-              <MDXContent source={cleanContent} />
+              <MDXContent source={cleanMDXContent(data?.Markdown)} />
             </div>
           </div>
         </div>

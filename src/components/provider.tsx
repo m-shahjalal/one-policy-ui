@@ -4,7 +4,6 @@ import CookieConsent from "@/components/blocks/cookie-consent";
 import Footer from "@/components/footer";
 import Navbar from "@/components/header";
 import { pages } from "@/config/routes";
-import fetch from "@/lib/fetcher";
 import { ThemeProvider } from "next-themes";
 import { usePathname } from "next/navigation";
 import NextTopLoader from "nextjs-toploader";
@@ -12,6 +11,7 @@ import { useEffect, useState } from "react";
 import { SWRConfig } from "swr";
 import FullPageLoader from "./page-loader";
 import { Toaster } from "./ui/sonner";
+import fetcher from "@/lib/fetcher";
 
 function ProviderInner({ children }: { children: React.ReactNode }) {
   const [cookieConsent, setCookieConsent] = useState<boolean | null>(null);
@@ -43,7 +43,8 @@ function ProviderInner({ children }: { children: React.ReactNode }) {
     <SWRConfig
       value={{
         refreshInterval: 3000,
-        fetcher: (r) => fetch.get(r).then((r) => r.data),
+        fetcher: (r) => fetcher.get(r as string),
+        onError: (err) => console.error("SWR Error:", err),
       }}
     >
       <NextTopLoader color="oklch(71.4% 0.203 305.504)" />

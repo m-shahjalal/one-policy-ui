@@ -5,8 +5,7 @@ export const createOrUpdatePolicy = async (
   options: { arg: { formData: FIX_ME } }
 ) => {
   try {
-    const result = await fetcher.post(url, options.arg.formData);
-    return result.data.data;
+    return await fetcher.post<FIX_ME>(url, options.arg.formData);
   } catch (error) {
     console.info("errors", error);
     return error;

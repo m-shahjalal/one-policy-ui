@@ -20,3 +20,11 @@ export const MDXOptions = {
     rehypePlugins: [rehypeSlug],
   },
 };
+
+export const cleanMDXContent = (content: string): string => {
+  return content
+    .replace(/^```markdown\n/, "")
+    .replace(/\n```$/, "")
+    .replace(/\\"/g, '"')
+    .replace(/\\n/g, "\n");
+};

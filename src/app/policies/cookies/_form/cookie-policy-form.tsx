@@ -75,6 +75,8 @@ export function CookiePolicyForm({ initial }: { initial?: CookieForm }) {
   const triggerForm = useTriggerForm<CookieForm>();
   const { data, isMutating, trigger, error } = swr;
 
+  console.log("data", data, isMutating, trigger, error);
+
   const clickSubmit = async () => {
     trigger({ formData: formRef.current?.form.watch() });
   };

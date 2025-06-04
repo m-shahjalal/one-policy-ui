@@ -1,46 +1,82 @@
-// lib/axios.ts
-import axios from "axios";
+const url = (path: string) => {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+  return new URL(path, baseUrl).toString();
+};
 
-const fetcher = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000",
-  headers: {
+const headers = (otherHeaders?: HeadersInit) => {
+  return {
     "Content-Type": "application/json",
-  },
-  withCredentials: true,
-});
+    Accept: "application/json",
+    ...otherHeaders,
+  };
+};
 
-// Request interceptor for auth token from cookies
-fetcher.interceptors.request.use(
-  (config) => {
-    const token = "token"; // Get token from cookie
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-// Response interceptor (unchanged)
-fetcher.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const status = error.response?.status;
-
-    if (status === 401) {
-      if (typeof window !== "undefined") {
-        window.location.href = "/login";
-      }
-    } else if (status === 403) {
-      console.error("Access denied");
-    } else if (status === 500) {
-      console.error("Server error");
-    } else {
-      console.error("API error", error);
-    }
-
-    return Promise.reject(error);
+const handleError = async <T>(response: Response) => {
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(
+      `HTTP error! status: ${response.status}, message: ${errorText}`
+    );
   }
-);
+
+  const contentType = response.headers.get("content-type");
+  if (!contentType || !contentType.includes("application/json")) {
+    const responseText = await response.text();
+    throw new Error(
+      `Expected JSON response but got: ${contentType}. Response: ${responseText.substring(
+        0,
+        200
+      )}...`
+    );
+  }
+
+  const result = await response.json();
+  if (!result || !result.data) {
+    throw new Error("Invalid response format: 'data' field is missing.");
+  }
+
+  return result.data as T;
+};
+
+export const fetcher = {
+  get: async <T>(path: string, options?: RequestInit) => {
+    const response = await fetch(url(path), {
+      headers: headers(options?.headers),
+      method: "GET",
+      ...options,
+    });
+
+    return await handleError<T>(response);
+  },
+  post: async <T>(path: string, body: FIX_ME, options?: RequestInit) => {
+    const response = await fetch(url(path), {
+      headers: headers(options?.headers),
+      method: "POST",
+      body: JSON.stringify(body),
+      ...options,
+    });
+
+    return await handleError<T>(response);
+  },
+  put: async <T>(path: string, body: FIX_ME, options?: RequestInit) => {
+    const response = await fetch(url(path), {
+      headers: headers(options?.headers),
+      method: "PUT",
+      body: JSON.stringify(body),
+      ...options,
+    });
+
+    return await handleError<T>(response);
+  },
+  delete: async <T>(path: string, options?: RequestInit) => {
+    const response = await fetch(url(path), {
+      headers: headers(options?.headers),
+      method: "DELETE",
+      ...options,
+    });
+
+    return await handleError<T>(response);
+  },
+};
 
 export default fetcher;
