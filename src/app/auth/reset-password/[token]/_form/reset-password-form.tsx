@@ -43,6 +43,7 @@ export default function ResetPasswordForm({}: ResetPasswordFormProps) {
   async function onSubmit(data: ResetPasswordFormValues) {
     setIsLoading(true);
     setError(null);
+    console.info("Resetting password with data:", data);
 
     try {
       const result = { success: true, error: false };

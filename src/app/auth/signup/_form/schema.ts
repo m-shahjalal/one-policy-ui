@@ -33,3 +33,10 @@ export const defaultValues: SignupFormValues = {
   confirmPassword: "",
   acceptTerms: false,
 };
+
+export type SignupResponse = {
+  id: string;
+  email: string;
+  name: string;
+  created_at: string;
+};

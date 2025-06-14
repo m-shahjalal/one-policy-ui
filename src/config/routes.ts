@@ -17,6 +17,11 @@ export const pages = {
     resetPass: "/auth/reset-password",
   },
 
+  dashboard: {
+    index: "/dashboard",
+    settings: "/dashboard/settings",
+  },
+
   policies: {
     cookies: {
       index: "/policies/cookies",
@@ -40,9 +45,14 @@ export const pages = {
 } as const;
 
 export const apis = {
-  login: "/auth/login",
-  register: "/auth/signup",
-  check: "/auth/me",
+  index: "/",
+  auth: {
+    login: "/auth/login",
+    register: "/auth/register",
+    refresh: "/auth/refresh",
+    me: "/auth/me",
+    logout: "/auth/logout",
+  },
 
   cookies: {
     index: "/policies/cookies",

@@ -21,7 +21,7 @@ export const MDXOptions = {
   },
 };
 
-export const cleanMDXContent = (content: string): string => {
+export const cleanMDXContent = (content = ""): string => {
   return content
     .replace(/^```markdown\n/, "")
     .replace(/\n```$/, "")

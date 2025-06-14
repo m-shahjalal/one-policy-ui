@@ -18,6 +18,7 @@ export default async function CookiePolicyPage({
 }) {
   const { id } = await params;
   const data = await fetcher.get<CookiePolicyData>(apis.cookies.view(id));
+  if (!data) return null;
 
   return (
     <DetailsViewPage

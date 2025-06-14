@@ -1,88 +1,65 @@
-import { toast } from "sonner";
-
-const url = (path: string) => {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
-  return new URL(path, baseUrl).toString();
+export type ApiResponse = {
+  status: number;
+  message: string;
+  data: FIX_ME;
 };
 
-const headers = (otherHeaders?: HeadersInit) => {
-  return {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-    ...otherHeaders,
-  };
+export const url = (path: string) => {
+  let baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+  if (baseUrl.endsWith("/")) {
+    baseUrl = baseUrl.slice(0, -1);
+  }
+
+  if (path.startsWith("/")) {
+    path = path.slice(1);
+  }
+
+  if (path.startsWith("http")) return path;
+  return `${baseUrl}/${path}`;
 };
 
-const handleError = async <T>(response: Response) => {
-  if (!response.ok) {
-    const errorText = await response.text();
-    const msg = `HTTP error! status: ${response.status}, message: ${errorText}`;
-    toast.error(msg);
-    console.error(msg);
-    throw new Error(msg);
+const options = (
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
+  data = {}
+): RequestInit => {
+  const obj = {
+    method,
+    mode: "cors",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+  } as RequestInit;
+
+  if (method !== "GET") {
+    obj.body = JSON.stringify(data);
   }
 
-  const contentType = response.headers.get("content-type");
-  if (!contentType || !contentType.includes("application/json")) {
-    const responseText = await response.text();
-    const msg = `Expected JSON response but got: ${contentType}. Response: ${responseText.substring(
-      0,
-      200
-    )}...`;
-    toast.error(msg);
-    console.error(msg);
-    throw new Error(msg);
-  }
-
-  const result = await response.json();
-  if (!result || !result.data) {
-    const msg = `Invalid response format: expected an object with a 'data' field`;
-    toast.error(msg);
-    console.error(msg);
-    throw new Error(msg);
-  }
-
-  return result.data as T;
+  return obj;
 };
 
 export const fetcher = {
-  get: async <T>(path: string, options?: RequestInit) => {
-    const response = await fetch(url(path), {
-      headers: headers(options?.headers),
-      method: "GET",
-      ...options,
-    });
-
-    return await handleError<T>(response);
+  get: async <T>(path: string): Promise<T> => {
+    const response = await fetch(url(path), options("GET"));
+    return response.json();
   },
-  post: async <T>(path: string, body: FIX_ME, options?: RequestInit) => {
-    const response = await fetch(url(path), {
-      headers: headers(options?.headers),
-      method: "POST",
-      body: JSON.stringify(body),
-      ...options,
-    });
 
-    return await handleError<T>(response);
+  post: async <T>(path: string, data: FIX_ME): Promise<T> => {
+    const response = await fetch(url(path), options("POST", data));
+    return response.json();
   },
-  put: async <T>(path: string, body: FIX_ME, options?: RequestInit) => {
-    const response = await fetch(url(path), {
-      headers: headers(options?.headers),
-      method: "PUT",
-      body: JSON.stringify(body),
-      ...options,
-    });
 
-    return await handleError<T>(response);
+  put: async <T>(path: string, data: FIX_ME): Promise<T> => {
+    const response = await fetch(url(path), options("PUT", data));
+    return response.json();
   },
-  delete: async <T>(path: string, options?: RequestInit) => {
-    const response = await fetch(url(path), {
-      headers: headers(options?.headers),
-      method: "DELETE",
-      ...options,
-    });
 
-    return await handleError<T>(response);
+  delete: async <T>(path: string): Promise<T> => {
+    const response = await fetch(url(path), options("DELETE"));
+    return response.json();
+  },
+
+  patch: async <T>(path: string, data: FIX_ME): Promise<T> => {
+    const response = await fetch(url(path), options("PATCH", data));
+    return response.json();
   },
 };
 

@@ -1,14 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
 import {
   Card,
   CardContent,
@@ -17,20 +16,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Form } from "@/components/ui/form";
 import { pages } from "@/config/routes";
+import { useAuth } from "@/hooks/use-auth";
 import {
-  LoginFormFields,
-  loginSchema,
   defaultValues,
+  LoginFormFields,
   type LoginFormValues,
+  loginSchema,
 } from ".";
 
 export default function LoginForm() {
-  const router = useRouter();
+  const { login } = useAuth();
   const search = useSearchParams();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const redirectTo = search.get("redirect") || pages.home;
+  const redirectTo = search.get("next") || pages.dashboard.index;
+  const [isLoading, startTransition] = useTransition();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -38,28 +38,7 @@ export default function LoginForm() {
   });
 
   async function onSubmit(data: LoginFormValues) {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const result = { success: true, error: false };
-
-      if (result.success) {
-        router.replace(redirectTo);
-        router.refresh();
-      } else {
-        setError(
-          typeof result.error === "string"
-            ? result.error
-            : "Invalid email or password"
-        );
-      }
-    } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
+    startTransition(async () => await login(data, redirectTo, form));
   }
 
   return (
@@ -71,9 +50,10 @@ export default function LoginForm() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {error && (
+            {form.formState.errors.root && (
               <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md">
-                {error}
+                {form.formState.errors.root.message ||
+                  "An unexpected error occurred. Please try again."}
               </div>
             )}
 
@@ -94,9 +74,9 @@ export default function LoginForm() {
       </CardContent>
       <CardFooter className="flex justify-center">
         <p className="text-sm text-muted-foreground">
-          Don&apos;t have an account?{" "}
+          Don&apos;t have an account?
           <Link
-            href={pages.auth.signup}
+            href={pages.auth.signup + `?next=${redirectTo}`}
             className="font-medium text-primary hover:underline"
           >
             Sign up

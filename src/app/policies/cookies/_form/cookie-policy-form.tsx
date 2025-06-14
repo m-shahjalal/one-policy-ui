@@ -77,15 +77,23 @@ export function CookiePolicyForm({ initial }: { initial?: CookieForm }) {
   const clickSubmit = async () => {
     setIsSubmitting(true);
 
-    const data = await fetcher.post<{ id: string }>(
-      apis.cookies.create,
-      formRef.current?.form.getValues()
-    );
+    const response = await fetcher.post<{
+      id: string;
+      success: boolean;
+      error?: string;
+      data?: FIX_ME;
+    }>(apis.cookies.create, formRef.current?.form.getValues());
 
-    if (data.id) {
-      toast.success("Cookie policy generated successfully.");
-      router.replace(pages.policies.cookies.view(data.id));
+    if (!response.success || !response.data?.id) {
+      setIsSubmitting(false);
+      toast.error(
+        response.error || "Failed to generate cookie policy. Please try again."
+      );
+      return;
     }
+
+    toast.success("Cookie policy generated successfully.");
+    router.replace(pages.policies.cookies.view(response.data.id));
   };
 
   return (

@@ -33,7 +33,7 @@ export default function GlobalError({
             <div className="p-8">
               <div className="mb-6 inline-block">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-red-100 dark:bg-red-900/30 rounded-full blur-xl opacity-70"></div>
+                  <div className="absolute inset-0 bg-red-100 dark:bg-red-900/30 rounded-full blur-xl opacity-70" />
                   <div className="relative z-10 w-20 h-20 flex items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-orange-500 text-white shadow-lg mx-auto">
                     <AlertTriangle className="w-10 h-10" />
                   </div>

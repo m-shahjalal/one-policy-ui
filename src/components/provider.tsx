@@ -4,44 +4,64 @@ import CookieConsent from "@/components/blocks/cookie-consent";
 import Footer from "@/components/footer";
 import Navbar from "@/components/header";
 import { pages } from "@/config/routes";
+import { AuthProvider, useAuth } from "@/hooks/use-auth";
+import fetcher from "@/lib/fetcher";
 import { ThemeProvider } from "next-themes";
 import { usePathname } from "next/navigation";
 import NextTopLoader from "nextjs-toploader";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SWRConfig } from "swr";
 import FullPageLoader from "./page-loader";
 import { Toaster } from "./ui/sonner";
-import fetcher from "@/lib/fetcher";
 
-function ProviderInner({ children }: { children: React.ReactNode }) {
-  const [cookieConsent, setCookieConsent] = useState<boolean | null>(null);
-  const theme = localStorage.getItem("theme") as "light" | "dark" | "system";
-  const pathname = usePathname();
+function ProviderInner({
+  children,
+  hide,
+}: {
+  children: React.ReactNode;
+  hide: boolean;
+}) {
+  const { loading } = useAuth();
+  const [cookieConsent, setCookieConsent] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage?.getItem("cookie-consent") ? true : false;
+  });
 
-  useEffect(() => {
-    const savedConsent = localStorage.getItem("cookie-consent");
-    if (savedConsent !== null) {
-      setCookieConsent(JSON.parse(savedConsent || "null"));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (cookieConsent !== null) {
-      localStorage.setItem("cookie-consent", JSON.stringify(cookieConsent));
-    }
-  }, [cookieConsent]);
-
-  const handleAcceptCookies = () => {
-    setCookieConsent(true);
+  const handleCookieConsent = (value: boolean) => {
+    setCookieConsent(value);
+    localStorage.setItem("cookie-consent", JSON.stringify(value));
   };
 
-  const handleDeclineCookies = () => {
-    setCookieConsent(false);
-  };
-
-  if (pathname.includes("/share/")) {
-    return children;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen fixed top-0 left-0 right-0 z-50">
+        <FullPageLoader />
+      </div>
+    );
   }
+
+  return (
+    <>
+      {hide && <Navbar />}
+      <div className="min-h-[calc(100vh-440px)]">{children}</div>
+      {hide && <Footer />}
+      {cookieConsent === null && (
+        <CookieConsent
+          onAccept={() => handleCookieConsent(true)}
+          onDecline={() => handleCookieConsent(false)}
+          cookiePolicyUrl={pages.policies.cookies.index}
+        />
+      )}
+      <NextTopLoader color="rgb(88, 60, 180)" />
+    </>
+  );
+}
+
+const Provider = ({ children }: { children: React.ReactNode }) => {
+  const pathname = usePathname();
+  const hideHeaderFooter = !/\/auth|\/dashboard/.test(pathname);
+
+  if (pathname.includes("/share/")) return children;
 
   return (
     <SWRConfig
@@ -51,40 +71,14 @@ function ProviderInner({ children }: { children: React.ReactNode }) {
         onError: (err) => console.error("SWR Error:", err),
       }}
     >
-      <NextTopLoader color="oklch(71.4% 0.203 305.504)" />
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        {!pathname.includes("/auth") && <Navbar />}
-        {children}
-        {!pathname.includes("/auth") && <Footer />}
-        {cookieConsent === null && (
-          <CookieConsent
-            onAccept={handleAcceptCookies}
-            onDecline={handleDeclineCookies}
-            cookiePolicyUrl={pages.policies.cookies.index}
-          />
-        )}
+      <ThemeProvider attribute="class" enableSystem>
+        <AuthProvider>
+          <ProviderInner hide={hideHeaderFooter}>{children}</ProviderInner>
+          <Toaster richColors position="top-center" />
+        </AuthProvider>
       </ThemeProvider>
-      <Toaster richColors position="top-center" theme={theme} />
     </SWRConfig>
   );
-}
-
-const Provider = ({ children }: { children: React.ReactNode }) => {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <FullPageLoader />
-      </div>
-    );
-  }
-
-  return <ProviderInner>{children}</ProviderInner>;
 };
 
 export default Provider;

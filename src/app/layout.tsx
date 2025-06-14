@@ -1,5 +1,3 @@
-'use client"';
-
 import Provider from "@/components/provider";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -14,7 +12,7 @@ export const metadata: Metadata = {
     "Privacy Policy, Terms & Conditions, Cookie Policy — all in one place.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (

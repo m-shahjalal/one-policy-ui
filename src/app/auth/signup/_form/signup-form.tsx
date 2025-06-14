@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
 import {
   Card,
   CardContent,
@@ -17,18 +17,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { pages } from "@/config/routes";
+import { Form } from "@/components/ui/form";
+import { apis, pages } from "@/config/routes";
 import {
+  defaultValues,
   SignupFormFields,
   signupSchema,
-  defaultValues,
   type SignupFormValues,
 } from ".";
+import fetcher from "@/lib/fetcher";
+import { User } from "../../action";
 
-export default function SignupForm() {
+export function SignupForm() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const search = useSearchParams();
+  const [isPending, startTransition] = useTransition();
+  const redirectTo = search.get("next");
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -36,73 +40,72 @@ export default function SignupForm() {
   });
 
   async function onSubmit(data: SignupFormValues) {
-    setIsLoading(true);
-    setError(null);
+    form.clearErrors("root");
+    const nextRoute = `${pages.auth.login}?next=${redirectTo}`;
 
-    try {
-      const result = { success: true, error: false };
+    startTransition(async () => {
+      const response = await fetcher.post<{ error?: string; data: User }>(
+        apis.auth.register,
+        data
+      );
 
-      if (result.success) {
-        router.push("/login?registered=true");
-        router.refresh();
-      } else {
-        setError(
-          typeof result.error === "string"
-            ? result.error
-            : "An error occurred during signup"
-        );
+      if (response.error) {
+        return form.setError("root", { message: response.error });
       }
-    } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
+
+      if (!response.data) {
+        return;
+      }
+      form.reset();
+      toast.success("Account created successfully!");
+      router.push(nextRoute);
+    });
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle className="text-2xl">Create an account</CardTitle>
-        <CardDescription>
-          Enter your information to create an account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {error && (
-              <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md">
-                {error}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <Card>
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl text-center">
+              Create an account
+            </CardTitle>
+            <CardDescription className="text-center">
+              Enter your email and password below to create your account
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent>
+            <SignupFormFields />
+            {form.formState.errors.root && (
+              <div className="text-sm font-medium text-destructive mt-2">
+                {form.formState.errors.root.message}
               </div>
             )}
+          </CardContent>
 
-            <SignupFormFields />
-
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating account...
-                </>
-              ) : (
-                "Create account"
-              )}
+          <CardFooter className="flex flex-col gap-4">
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isPending || !form.formState.isValid}
+            >
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Create account
             </Button>
-          </form>
-        </Form>
-      </CardContent>
-      <CardFooter className="flex justify-center">
-        <p className="text-sm text-muted-foreground">
-          Already have an account?{" "}
-          <Link
-            href={pages.auth.login}
-            className="font-medium text-primary hover:underline"
-          >
-            Login
-          </Link>
-        </p>
-      </CardFooter>
-    </Card>
+
+            <div className="text-sm text-muted-foreground text-center">
+              Already have an account?{" "}
+              <Link
+                href={`${pages.auth.login}?next=${redirectTo}`}
+                className="text-primary underline-offset-4 transition-colors hover:underline"
+              >
+                Sign in
+              </Link>
+            </div>
+          </CardFooter>
+        </Card>
+      </form>
+    </Form>
   );
 }
