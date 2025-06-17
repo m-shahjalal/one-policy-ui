@@ -13,6 +13,7 @@ import { useState } from "react";
 import { SWRConfig } from "swr";
 import FullPageLoader from "./page-loader";
 import { Toaster } from "./ui/sonner";
+import { ModalProvider } from "./blocks/modal";
 
 function ProviderInner({
   children,
@@ -71,12 +72,14 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
         onError: (err) => console.error("SWR Error:", err),
       }}
     >
-      <ThemeProvider attribute="class" enableSystem>
-        <AuthProvider>
-          <ProviderInner hide={hideHeaderFooter}>{children}</ProviderInner>
-          <Toaster richColors position="top-center" />
-        </AuthProvider>
-      </ThemeProvider>
+      <ModalProvider>
+        <ThemeProvider attribute="class" enableSystem>
+          <AuthProvider>
+            <ProviderInner hide={hideHeaderFooter}>{children}</ProviderInner>
+            <Toaster richColors position="top-center" />
+          </AuthProvider>
+        </ThemeProvider>
+      </ModalProvider>
     </SWRConfig>
   );
 };

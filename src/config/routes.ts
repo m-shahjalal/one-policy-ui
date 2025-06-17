@@ -20,26 +20,22 @@ export const pages = {
   dashboard: {
     index: "/dashboard",
     settings: "/dashboard/settings",
+    view: (slug: string) => `/dashboard/${slug}` as const,
+    edit: (slug: string) => `/dashboard/${slug}/edit` as const,
   },
 
   policies: {
     cookies: {
       index: "/policies/cookies",
       create: "/policies/cookies/create",
-      view: (slug: string) => `/policies/cookies/${slug}` as const,
-      edit: (slug: string) => `/policies/cookies/${slug}/edit` as const,
     },
     privacies: {
       index: "/policies/privacies",
       create: "/policies/privacies/create",
-      view: (slug: string) => `/policies/privacies/${slug}` as const,
-      edit: (slug: string) => `/policies/privacies/${slug}/edit` as const,
     },
     terms: {
       index: "/policies/terms",
       create: "/policies/terms/create",
-      view: (slug: string) => `/policies/terms/${slug}` as const,
-      edit: (slug: string) => `/policies/terms/${slug}/edit` as const,
     },
   },
 } as const;
@@ -54,11 +50,13 @@ export const apis = {
     logout: "/auth/logout",
   },
 
-  cookies: {
-    index: "/policies/cookies",
-    create: "/policies/cookies",
-    view: (slug: string) => `/policies/cookies/${slug}` as const,
-    edit: (slug: string) => `/policies/cookies/${slug}/edit`,
+  policies: {
+    index: "/policies",
+    create: "/policies/create",
+    view: (id: string) => `/policies/${id}`,
+    edit: (id: string) => `/policies/${id}/edit`,
+    delete: (id: string) => `/policies/${id}`,
+    ai_edit: (id: string) => `/policies/${id}/ai-edit`,
   },
 } as const;
 

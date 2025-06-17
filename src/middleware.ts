@@ -36,8 +36,11 @@ export async function middleware(request: NextRequest) {
   if (!token) {
     const loginUrl = new URL(pages.auth.login, request.url);
     loginUrl.searchParams.set("next", pathname);
+
     const response = NextResponse.redirect(loginUrl);
-    clearUserCookies(response);
+    response.cookies.delete("access_token");
+    response.cookies.delete("refresh_token");
+    response.cookies.delete("user_store");
     return response;
   }
 
@@ -59,40 +62,33 @@ export async function middleware(request: NextRequest) {
     if (!result?.success) {
       const loginUrl = new URL(pages.auth.login, request.url);
       loginUrl.searchParams.set("next", pathname);
+
       const response = NextResponse.redirect(loginUrl);
-      clearUserCookies(response);
+      response.cookies.delete("access_token");
+      response.cookies.delete("refresh_token");
+      response.cookies.delete("user_store");
       return response;
     }
 
     const response = NextResponse.next();
-    if (result.data) setUserCookies(response, result.data);
-
+    if (result.data) {
+      response.cookies.set("user_store", JSON.stringify(result.data), {
+        httpOnly: false,
+      });
+    }
     return response;
   } catch (error) {
     console.error("Error validating session:", error);
+
     const loginUrl = new URL(pages.auth.login, request.url);
     loginUrl.searchParams.set("next", pathname);
+
     const response = NextResponse.redirect(loginUrl);
-    clearUserCookies(response);
+    response.cookies.delete("access_token");
+    response.cookies.delete("refresh_token");
+    response.cookies.delete("user_store");
     return response;
   }
-}
-
-function setUserCookies(response: NextResponse, userData: FIX_ME) {
-  const cookieOptions = {
-    httpOnly: false,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
-    maxAge: 60 * 60 * 24 * 365,
-    path: "/",
-  };
-  response.cookies.set("user_store", JSON.stringify(userData), cookieOptions);
-}
-
-function clearUserCookies(response: NextResponse) {
-  response.cookies.delete("access_token");
-  response.cookies.delete("refresh_token");
-  response.cookies.delete("user_store");
 }
 
 export const config = {

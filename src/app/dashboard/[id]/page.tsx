@@ -3,21 +3,16 @@ import { DetailsViewPage } from "@/components/shared/details-view";
 import { apis } from "@/config/routes";
 import fetcher from "@/lib/fetcher";
 import { cleanMDXContent } from "@/lib/mdx";
+import { Policy } from "@/lib/type";
+import { format } from "date-fns";
 
-interface CookiePolicyData {
-  id: string;
-  updated_at: string;
-  Effect_date: string;
-  Markdown: string;
-}
-
-export default async function CookiePolicyPage({
+export default async function PolicyPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const data = await fetcher.get<CookiePolicyData>(apis.cookies.view(id));
+  const { data } = await fetcher.get<{ data: Policy }>(apis.policies.view(id));
   if (!data) return null;
 
   return (
@@ -26,10 +21,10 @@ export default async function CookiePolicyPage({
       type="cookies"
       title="Cookie Policy"
       description="This Cookie Policy explains how OnePolicy uses cookies and similar technologies to enhance your browsing experience."
-      lastUpdated={data.updated_at}
-      effectiveDate={data.Effect_date}
-      policyComponent={<MDXContent source={cleanMDXContent(data.Markdown)} />}
-      policyText={data.Markdown}
+      lastUpdated={format(data.updated_at ?? data.created_at, "d MMM, yyyy")}
+      effectiveDate={format(data.effect_date ?? "", "d MMM, yyyy")}
+      policyComponent={<MDXContent source={cleanMDXContent(data.markdown)} />}
+      policyText={data.markdown}
     />
   );
 }

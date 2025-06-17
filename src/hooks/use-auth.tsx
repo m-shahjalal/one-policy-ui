@@ -1,9 +1,10 @@
 "use client";
 
-import { createSession, destroySession, type User } from "@/app/auth/action";
+import { createSession, destroySession } from "@/app/auth/action";
 import { LoginFormValues } from "@/app/auth/login/_form";
 import { pages } from "@/config/routes";
-import { useRouter } from "next/navigation";
+import { User } from "@/lib/type";
+import { usePathname, useRouter } from "next/navigation";
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
@@ -43,6 +44,7 @@ function getUserStore(tokenName = "user_store"): User | null {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
+  const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -53,6 +55,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(store);
       setIsAuthenticated(store !== null);
       setLoading(false);
+
+      if (store && pathname === pages.auth.login) {
+        router.push(pages.dashboard.index);
+      }
     };
 
     initializeUser();
@@ -66,7 +72,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       window.removeEventListener("storage", handleStorageChange);
       window.removeEventListener("cookieUpdate", handleStorageChange);
     };
-  }, []);
+  }, [pathname, router]);
 
   const login = async (
     data: LoginFormValues,

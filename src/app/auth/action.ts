@@ -1,20 +1,11 @@
 "use server";
 
 import { apis } from "@/config/routes";
-import fetcher, { url } from "@/lib/fetcher";
+import fetcher from "@/lib/fetcher";
+import { User } from "@/lib/type";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import type { LoginFormValues } from "./login/_form";
-
-export type User = {
-  id: string;
-  email: string;
-  name: string;
-  role?: string;
-  avatar?: string;
-  permissions?: string[];
-  preferences?: Record<string, FIX_ME>;
-};
 
 export type AuthResponse = {
   message: string;
@@ -69,20 +60,4 @@ export const destroySession = async () => {
   cookieStore.delete("access_token");
   cookieStore.delete("refresh_token");
   cookieStore.delete("user_store");
-};
-
-export const getCurrentUser = async (): Promise<User | null> => {
-  const cookieStore = await cookies();
-  const headers = { Cookie: cookieStore.toString() };
-
-  try {
-    const response = await fetch(url(apis.auth.me), { headers });
-    const result = await response.json();
-    if (result.error || !result.success) return null;
-
-    return result.data;
-  } catch (error) {
-    console.error("Get current user error:", error);
-    return null;
-  }
 };

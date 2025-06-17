@@ -8,9 +8,10 @@ import { Clock, FileText, Sparkles } from "lucide-react";
 interface CookiePolicyData {
   id: string;
   updated_at: string;
-  Effect_date: string;
-  Markdown: string;
-  Policy_type: string;
+  effect_date: string;
+  markdown: string;
+  policy_type: string;
+  created_at: string;
 }
 
 export default async function SharePage({
@@ -19,11 +20,16 @@ export default async function SharePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const url = `${process.env.NEXT_PUBLIC_API_URL}${apis.cookies.view(slug)}`;
-  const data = await fetcher.get<CookiePolicyData>(url);
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${apis.policies.view(slug)}`;
+  const { data } = await fetcher.get<{ data: CookiePolicyData }>(url);
 
-  const readableLastUpdated = format(data?.updated_at ?? "", "d MMM, yyyy");
-  const readableEffective = format(data?.Effect_date ?? "", "d MMM, yyyy");
+  const readableLastUpdated =
+    data?.updated_at ?? data?.created_at
+      ? format(data?.updated_at ?? data?.created_at, "d MMM, yyyy")
+      : "Unknown";
+  const readableEffective = data?.effect_date
+    ? format(data?.effect_date, "d MMM, yyyy")
+    : "Unknown";
 
   return (
     <div className="lg:col-span-2 order-1 lg:order-2 max-w-7xl mx-auto px-4">
@@ -33,7 +39,7 @@ export default async function SharePage({
         >
           <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white">
             <FileText className={`h-5 w-5`} />
-            <span>{data?.Policy_type} Content</span>
+            <span>{data?.policy_type} Content</span>
           </h2>
 
           <div className="flex items-center gap-2">
@@ -60,7 +66,7 @@ export default async function SharePage({
 
           <div className="prose dark:prose-invert max-w-none prose-sm sm:prose-base dark:text-gray-300">
             <div className="whitespace-pre-wrap">
-              <MDXContent source={cleanMDXContent(data?.Markdown ?? "")} />
+              <MDXContent source={cleanMDXContent(data?.markdown ?? "")} />
             </div>
           </div>
         </div>

@@ -26,7 +26,7 @@ import {
   type SignupFormValues,
 } from ".";
 import fetcher from "@/lib/fetcher";
-import { User } from "../../action";
+import { User } from "@/lib/type";
 
 export function SignupForm() {
   const router = useRouter();

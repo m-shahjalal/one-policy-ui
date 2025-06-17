@@ -2,7 +2,6 @@
 
 import type React from "react";
 
-import { User as UserType } from "@/app/auth/action";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,6 +21,7 @@ import {
 } from "@/components/ui/sheet";
 import { pages } from "@/config/routes";
 import { useAuth } from "@/hooks/use-auth";
+import { User as UserType } from "@/lib/type";
 import { motion } from "framer-motion";
 import {
   ChevronDown,
@@ -29,7 +29,6 @@ import {
   FileText,
   LogOut,
   MenuIcon,
-  Settings,
   Shield,
   User,
 } from "lucide-react";
@@ -167,22 +166,15 @@ const MobileMenu = ({
                     <span>Dashboard</span>
                   </Link>
                 </SheetClose>
-                <SheetClose asChild key="settings">
-                  <Link
-                    href="/settings"
-                    className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                <SheetClose asChild key="logout">
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors mt-2"
                   >
-                    <Settings className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                    <span>Settings</span>
-                  </Link>
+                    <LogOut className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                    <span>Logout</span>
+                  </button>
                 </SheetClose>
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors mt-2"
-                >
-                  <LogOut className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                  <span>Logout</span>
-                </button>
               </>
             ) : (
               <>
@@ -258,12 +250,6 @@ const DesktopNav = ({
                 <Link href={pages.dashboard.index} className="cursor-pointer">
                   <User className="mr-2 h-4 w-4" />
                   <span>Dashboard</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/settings" className="cursor-pointer">
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />

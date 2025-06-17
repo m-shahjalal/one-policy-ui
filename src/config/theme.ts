@@ -96,5 +96,3 @@ export const themeConfig = {
     },
   },
 } as const;
-
-export type PolicyType = keyof typeof themeConfig;

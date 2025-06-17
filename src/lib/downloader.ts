@@ -151,14 +151,14 @@ export const downloadContent = (
   content: string | HTMLElement,
   options?: DownloadOptions
 ): void => {
-  const downloaders = {
+  const allDownloader = {
     HTML: () => downloadHtml(content as HTMLElement, options),
     MD: () => downloadMarkdown(content as string, options),
     PDF: () => downloadPdf(content as HTMLElement, options),
     TXT: () => downloadText(content as string, options),
   };
 
-  const downloader = downloaders[type];
+  const downloader = allDownloader[type];
   if (!downloader) {
     throw new Error(`Unsupported download type: ${type}`);
   }

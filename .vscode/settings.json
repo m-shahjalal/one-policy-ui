@@ -1,4 +1,11 @@
 {
-  "cSpell.words": ["CCPA", "formify", "Jost", "onepolicy", "sonner"],
+  "cSpell.words": [
+    "CCPA",
+    "formify",
+    "Jost",
+    "mdxeditor",
+    "onepolicy",
+    "sonner"
+  ],
   "postman.settings.dotenv-detection-notification-visibility": false
 }

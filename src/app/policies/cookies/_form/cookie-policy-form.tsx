@@ -82,7 +82,7 @@ export function CookiePolicyForm({ initial }: { initial?: CookieForm }) {
       success: boolean;
       error?: string;
       data?: FIX_ME;
-    }>(apis.cookies.create, formRef.current?.form.getValues());
+    }>(apis.policies.create, formRef.current?.form.getValues());
 
     if (!response.success || !response.data?.id) {
       setIsSubmitting(false);
@@ -93,7 +93,7 @@ export function CookiePolicyForm({ initial }: { initial?: CookieForm }) {
     }
 
     toast.success("Cookie policy generated successfully.");
-    router.replace(pages.policies.cookies.view(response.data.id));
+    router.replace(pages.dashboard.view(response.data.id));
   };
 
   return (
